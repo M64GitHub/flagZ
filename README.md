@@ -3,12 +3,13 @@
 Dead-simple flags to Zig structs—no fuss, flags: done!
 
 ## What It Does
+Parses CLI flags into your Zig struct. Strings (`[]u8`) are allocated, integers (`usize`) parsed, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. Supports any fields you define!
 
-Define a struct. Pass it to `flagz.parse()`. Your CLI flags fill it automagically. No docs to slog through, no complex setup—just your work, done.
+Parses CLI flags into your Zig struct—flag names match field names (e.g., `-name` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`) parsed, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. Supports any fields you define!
 
 ## Why flagZ?
 
-Because CLI args shouldn’t suck. Define your struct, and let the flags revolution begin!
+Because CLI args shouldn’t suck. Define your struct, defer
 
 Flag parsing in command-line tools can be a chore—loops, conditionals, type conversions, ugh! Enter **flagZ**, a Zig module that turns this mess into a one-liner: define a struct, call `flagz.parse()`, and boom—your flags are in, no fuss. 
 

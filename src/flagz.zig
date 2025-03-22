@@ -1,5 +1,11 @@
 const std = @import("std");
 
+pub const Error = error{
+    MissingValue,
+    StringTooLong,
+    InvalidIntValue, // New custom error
+};
+
 pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
     var arena = std.heap.ArenaAllocator.init(allocator);
     defer arena.deinit();
@@ -50,7 +56,14 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                                 return error.MissingValue;
                             }
                             const value = args[arg_index + 1];
-                            @field(result, field.name) = try std.fmt.parseInt(field.type, value, 10);
+                            @field(result, field.name) = std.fmt.parseInt(field.type, value, 10) catch {
+                                inline for (fields) |f| {
+                                    if (@typeInfo(f.type) == .Pointer and f.type == []u8 and @field(result, f.name).len > 0) {
+                                        allocator.free(@field(result, f.name));
+                                    }
+                                }
+                                return error.InvalidIntValue; // New error for invalid int
+                            };
                             arg_index += 1;
                         },
                         .Pointer => |ptr| if (ptr.child == u8) {
@@ -63,7 +76,7 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                                 return error.MissingValue;
                             }
                             const value = args[arg_index + 1];
-                            const copied = try allocator.dupe(u8, value); // Use user's allocator
+                            const copied = try allocator.dupe(u8, value);
                             @field(result, field.name) = copied;
                             arg_index += 1;
                         },
@@ -98,7 +111,6 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
     return result;
 }
 
-// Module-level deinit function
 pub fn deinit(comptime T: type, args: T, allocator: std.mem.Allocator) void {
     const fields = std.meta.fields(T);
     inline for (fields) |field| {

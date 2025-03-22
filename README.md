@@ -48,7 +48,7 @@ Adds the dependency to your `build.zig.zon`:
 ```zig
 .dependencies = .{
     .flagz = .{
-        .url = "https://github.com/M64GitHub/zigreSID/archive/refs/tags/v0.0.0-alpha.tar.gz",
+        .url = "https://github.com/M64GitHub/flagz/archive/refs/tags/v0.0.2-alpha.tar.gz",
         .hash = "12207fd061a0e099dd70964ef6f508cae2ddd40a98651449ce1fb250abaa70c587bd",
     },
 },

@@ -47,7 +47,7 @@ pub fn main() !void {
 
 Run:
 ```
-zig build run -- -name hello -count 42  -tag ziggy
+zig build run -- -name hello -count 42 -verbose -tag ziggy
 ```
 
 ## Add flagZ To Your Project

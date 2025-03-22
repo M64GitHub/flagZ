@@ -135,10 +135,12 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
     return result;
 }
 
-pub fn deinit(comptime T: type, args: T, allocator: std.mem.Allocator) void {
-    const fields = std.meta.fields(T);
+pub fn deinit(args: anytype, allocator: std.mem.Allocator) void {
+    const fields = std.meta.fields(@TypeOf(args));
     inline for (fields) |field| {
-        if (@typeInfo(field.type) == .pointer and field.type == []u8) {
+        if (@typeInfo(field.type) == .pointer and
+            (field.type == []u8 or field.type == []const u8))
+        {
             if (@field(args, field.name).len > 0) {
                 allocator.free(@field(args, field.name));
             }

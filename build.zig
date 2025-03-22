@@ -19,7 +19,15 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addImport("flagz", flagz_module);
     b.installArtifact(exe);
 
-    // Run the example
+    // tests
+    const tests = b.addTest(.{
+        .root_source_file = b.path("src/test.zig"),
+    });
+    const run_tests = b.addRunArtifact(tests);
+    const test_step = b.step("test", "Run tests");
+    test_step.dependOn(&run_tests.step);
+
+    // run the example
     const run_cmd = b.addRunArtifact(exe);
     run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {

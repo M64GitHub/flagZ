@@ -1,27 +1,14 @@
 const std = @import("std");
 
-pub fn ParsedArgs(comptime T: type) type {
-    return struct {
-        values: T,
-        allocator: std.mem.Allocator,
+pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
+    var arena = std.heap.ArenaAllocator.init(allocator);
+    defer arena.deinit();
+    const arena_allocator = arena.allocator();
 
-        pub fn deinit(self: @This()) void {
-            inline for (std.meta.fields(T)) |field| {
-                if (@typeInfo(field.type) == .Pointer and field.type == []u8) {
-                    if (@field(self.values, field.name).len > 0) {
-                        self.allocator.free(@field(self.values, field.name));
-                    }
-                }
-            }
-        }
-    };
-}
-
-pub fn parse(comptime T: type, allocator: std.mem.Allocator) !ParsedArgs(T) {
     var result: T = undefined;
 
-    const args = try std.process.argsAlloc(allocator);
-    defer std.process.argsFree(allocator, args);
+    const args = try std.process.argsAlloc(arena_allocator);
+    defer std.process.argsFree(arena_allocator, args);
 
     var arg_index: usize = 1;
 
@@ -76,7 +63,7 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !ParsedArgs(T) {
                                 return error.MissingValue;
                             }
                             const value = args[arg_index + 1];
-                            const copied = try allocator.dupe(u8, value);
+                            const copied = try allocator.dupe(u8, value); // Use user's allocator
                             @field(result, field.name) = copied;
                             arg_index += 1;
                         },
@@ -108,8 +95,17 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !ParsedArgs(T) {
         }
     }
 
-    return ParsedArgs(T){
-        .values = result,
-        .allocator = allocator,
-    };
+    return result;
+}
+
+// Module-level deinit function
+pub fn deinit(comptime T: type, args: T, allocator: std.mem.Allocator) void {
+    const fields = std.meta.fields(T);
+    inline for (fields) |field| {
+        if (@typeInfo(field.type) == .Pointer and field.type == []u8) {
+            if (@field(args, field.name).len > 0) {
+                allocator.free(@field(args, field.name));
+            }
+        }
+    }
 }

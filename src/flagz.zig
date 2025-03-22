@@ -22,12 +22,12 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
 
     inline for (fields) |field| {
         switch (@typeInfo(field.type)) {
-            .Bool => @field(result, field.name) = false,
-            .Int => @field(result, field.name) = 0,
-            .Array => |arr| if (arr.child == u8) {
+            .bool => @field(result, field.name) = false,
+            .int => @field(result, field.name) = 0,
+            .array => |arr| if (arr.child == u8) {
                 @field(result, field.name) = [_]u8{0} ** arr.len;
             },
-            .Pointer => |ptr| if (ptr.child == u8) {
+            .pointer => |ptr| if (ptr.child == u8) {
                 @field(result, field.name) = "";
             },
             else => @compileError("Unsupported field type: " ++
@@ -44,13 +44,13 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
 
                 if (std.mem.eql(u8, flag_name, field_name)) {
                     switch (@typeInfo(field.type)) {
-                        .Bool => {
+                        .bool => {
                             @field(result, field.name) = true;
                         },
-                        .Int => |_| {
+                        .int => |_| {
                             if (arg_index + 1 >= args.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and
+                                    if (@typeInfo(f.type) == .pointer and
                                         f.type == []u8 and
                                         @field(result, f.name).len > 0)
                                     {
@@ -63,7 +63,7 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                             @field(result, field.name) =
                                 std.fmt.parseInt(field.type, value, 10) catch {
                                     inline for (fields) |f| {
-                                        if (@typeInfo(f.type) == .Pointer and
+                                        if (@typeInfo(f.type) == .pointer and
                                             f.type == []u8 and
                                             @field(result, f.name).len > 0)
                                         {
@@ -77,10 +77,10 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                                 };
                             arg_index += 1;
                         },
-                        .Pointer => |ptr| if (ptr.child == u8) {
+                        .pointer => |ptr| if (ptr.child == u8) {
                             if (arg_index + 1 >= args.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and
+                                    if (@typeInfo(f.type) == .pointer and
                                         f.type == []u8 and
                                         @field(result, f.name).len > 0)
                                     {
@@ -94,10 +94,10 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                             @field(result, field.name) = copied;
                             arg_index += 1;
                         },
-                        .Array => |arr| if (arr.child == u8) {
+                        .array => |arr| if (arr.child == u8) {
                             if (arg_index + 1 >= args.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and
+                                    if (@typeInfo(f.type) == .pointer and
                                         f.type == []u8 and
                                         @field(result, f.name).len > 0)
                                     {
@@ -109,7 +109,7 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                             const value = args[arg_index + 1];
                             if (value.len > arr.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and
+                                    if (@typeInfo(f.type) == .pointer and
                                         f.type == []u8 and
                                         @field(result, f.name).len > 0)
                                     {
@@ -138,7 +138,7 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
 pub fn deinit(comptime T: type, args: T, allocator: std.mem.Allocator) void {
     const fields = std.meta.fields(T);
     inline for (fields) |field| {
-        if (@typeInfo(field.type) == .Pointer and field.type == []u8) {
+        if (@typeInfo(field.type) == .pointer and field.type == []u8) {
             if (@field(args, field.name).len > 0) {
                 allocator.free(@field(args, field.name));
             }

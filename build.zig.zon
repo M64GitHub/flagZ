@@ -1,7 +1,14 @@
-.{ .name = "flagz", .version = "0.0.0", .dependencies = .{}, .paths = .{
-    "src/flagz.zig",
-    "src/test.zig",
-    "build.zig",
-    "build.zig.zon",
-    "README.md",
-} }
+.{
+    .name = .flagz,
+    .version = "0.0.0",
+    .fingerprint = 0x72d9f91e6c35d5bd,
+    .minimum_zig_version = "0.14.0",
+    .dependencies = .{},
+    .paths = .{
+        "src/flagz.zig",
+        "src/test.zig",
+        "build.zig",
+        "build.zig.zon",
+        "README.md",
+    },
+}

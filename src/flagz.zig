@@ -38,7 +38,11 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
     while (arg_index < args.len) : (arg_index += 1) {
         const arg = args[arg_index];
         if (arg.len > 1 and arg[0] == '-') {
-            const flag_name = arg[1..];
+            var start_idx: usize = 1;
+            if (arg.len > 2 and arg[1] == '-') {
+                start_idx = 2;
+            }
+            const flag_name = arg[start_idx..];
             inline for (fields) |field| {
                 const field_name = if (field.name[0] == '.')
                     field.name[1..]
@@ -141,7 +145,7 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
 pub fn deinit(comptime T: type, args: T, allocator: std.mem.Allocator) void {
     const fields = std.meta.fields(T);
     inline for (fields) |field| {
-        if (@typeInfo(field.type) == .pointer and field.type == []u8) {
+        if (@typeInfo(field.type) == .pointer and (field.type == []u8 or field.type == []const u8)) {
             if (@field(args, field.name).len > 0) {
                 allocator.free(@field(args, field.name));
             }

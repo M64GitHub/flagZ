@@ -7,7 +7,7 @@ pub fn main() !void {
     const allocator = gpa.allocator();
 
     const Args = struct {
-        name: []u8,
+        name: []const u8,
         count: usize,
         verbose: bool,
         tag: [8]u8,

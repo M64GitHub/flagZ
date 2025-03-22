@@ -3,7 +3,7 @@ const flagz = @import("flagz.zig");
 
 test "normal case - all fields set" {
     const Args = struct {
-        name: []u8,
+        name: []const u8,
         count: usize,
         verbose: bool,
         tag: [8]u8,
@@ -20,7 +20,7 @@ test "normal case - all fields set" {
             "hello",
             "-count",
             "42",
-            "-verbose",
+            "--verbose",
             "-tag",
             "ziggy",
         };

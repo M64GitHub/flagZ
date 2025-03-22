@@ -13,8 +13,8 @@ Because CLI args shouldn’t suck. Define your struct, and let the flags revolut
 ## Example
 
 ```zig
-const std = @import(\"std\");
-const flagz = @import(\"flagz.zig\");
+const std = @import("std");
+const flagz = @import("flagz");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -31,14 +31,10 @@ pub fn main() !void {
     const args = try flagz.parse(Args, allocator);
     defer allocator.free(args.name);
 
-    std.debug.print(\"Name: {s}\
-\", .{args.name});
-    std.debug.print(\"Count: {}\
-\", .{args.count});
-    std.debug.print(\"Verbose: {} (flags revolution begins!)\
-\", .{args.verbose});
-    std.debug.print(\"Tag: {s}\
-\", .{args.tag});
+    std.debug.print("Name: {s}\n", .{args.name});
+    std.debug.print("Count: {}\n", .{args.count});
+    std.debug.print("Verbose: {} (flags revolution begins!)\n", .{args.verbose});
+    std.debug.print("Tag: {s}\n", .{args.tag});
 }
 ```
 

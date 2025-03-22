@@ -29,14 +29,14 @@ pub fn main() !void {
     const allocator = gpa.allocator();
 
     const Args = struct {
-        name: []u8,
+        name: []const u8,
         count: usize,
         verbose: bool,
         tag: [8]u8,
     };
 
     const args = try flagz.parse(Args, allocator);
-    defer flagz.deinit(Args, args, allocator);
+    defer flagz.deinit(args, allocator);
 
     std.debug.print("Name: {s}\n", .{args.name});
     std.debug.print("Count: {}\n", .{args.count});

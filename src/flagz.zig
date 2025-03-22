@@ -30,7 +30,8 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
             .Pointer => |ptr| if (ptr.child == u8) {
                 @field(result, field.name) = "";
             },
-            else => @compileError("Unsupported field type: " ++ @typeName(field.type)),
+            else => @compileError("Unsupported field type: " ++
+                @typeName(field.type)),
         }
     }
 
@@ -39,7 +40,10 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
         if (arg.len > 1 and arg[0] == '-') {
             const flag_name = arg[1..];
             inline for (fields) |field| {
-                const field_name = if (field.name[0] == '.') field.name[1..] else field.name;
+                const field_name = if (field.name[0] == '.')
+                    field.name[1..]
+                else
+                    field.name;
 
                 if (std.mem.eql(u8, flag_name, field_name)) {
                     switch (@typeInfo(field.type)) {
@@ -49,27 +53,40 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                         .Int => |_| {
                             if (arg_index + 1 >= args.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and f.type == []u8 and @field(result, f.name).len > 0) {
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
                                         allocator.free(@field(result, f.name));
                                     }
                                 }
                                 return error.MissingValue;
                             }
                             const value = args[arg_index + 1];
-                            @field(result, field.name) = std.fmt.parseInt(field.type, value, 10) catch {
-                                inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and f.type == []u8 and @field(result, f.name).len > 0) {
-                                        allocator.free(@field(result, f.name));
+                            @field(result, field.name) =
+                                std.fmt.parseInt(field.type, value, 10) catch {
+                                    inline for (fields) |f| {
+                                        if (@typeInfo(f.type) == .Pointer and
+                                            f.type == []u8 and
+                                            @field(result, f.name).len > 0)
+                                        {
+                                            allocator.free(@field(
+                                                result,
+                                                f.name,
+                                            ));
+                                        }
                                     }
-                                }
-                                return error.InvalidIntValue; // New error for invalid int
-                            };
+                                    return error.InvalidIntValue;
+                                };
                             arg_index += 1;
                         },
                         .Pointer => |ptr| if (ptr.child == u8) {
                             if (arg_index + 1 >= args.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and f.type == []u8 and @field(result, f.name).len > 0) {
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
                                         allocator.free(@field(result, f.name));
                                     }
                                 }
@@ -83,7 +100,10 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                         .Array => |arr| if (arr.child == u8) {
                             if (arg_index + 1 >= args.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and f.type == []u8 and @field(result, f.name).len > 0) {
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
                                         allocator.free(@field(result, f.name));
                                     }
                                 }
@@ -92,16 +112,23 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                             const value = args[arg_index + 1];
                             if (value.len > arr.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) == .Pointer and f.type == []u8 and @field(result, f.name).len > 0) {
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
                                         allocator.free(@field(result, f.name));
                                     }
                                 }
                                 return error.StringTooLong;
                             }
-                            @memcpy(@field(result, field.name)[0..value.len], value);
+                            @memcpy(
+                                @field(result, field.name)[0..value.len],
+                                value,
+                            );
                             arg_index += 1;
                         },
-                        else => @compileError("Unsupported field type: " ++ @typeName(field.type)),
+                        else => @compileError("Unsupported field type: " ++
+                            @typeName(field.type)),
                     }
                 }
             }

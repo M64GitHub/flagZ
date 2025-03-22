@@ -55,9 +55,11 @@ const Args = struct {
     verbose: bool,
 };
 ```
-
+The famous 1-liner:
 ```zig
 const parsed = try flagz.parse(Args, allocator);
+```
+```zig
 defer parsed.deinit();
 ```
 

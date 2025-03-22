@@ -14,7 +14,6 @@ pub fn main() !void {
     };
 
     const args = try flagz.parse(Args, allocator);
-    // defer flagz.deinit(args, allocator);
     defer flagz.deinit(args, allocator);
 
     std.debug.print("Name: {s}\n", .{args.name});

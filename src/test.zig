@@ -1,9 +1,9 @@
 const std = @import("std");
-const flagz = @import("flagz.zig");
+const flagz = @import("flagz");
 
 test "normal case - all fields set" {
     const Args = struct {
-        name: []u8,
+        name: []const u8,
         count: usize,
         verbose: bool,
         tag: [8]u8,
@@ -20,7 +20,7 @@ test "normal case - all fields set" {
             "hello",
             "-count",
             "42",
-            "-verbose",
+            "--verbose",
             "-tag",
             "ziggy",
         };
@@ -34,7 +34,7 @@ test "normal case - all fields set" {
     std.os.argv = @constCast(argv);
 
     const args = try flagz.parse(Args, allocator);
-    defer flagz.deinit(Args, args, allocator);
+    defer flagz.deinit(args, allocator);
 
     try std.testing.expectEqualStrings("hello", args.name);
     try std.testing.expectEqual(@as(usize, 42), args.count);
@@ -154,7 +154,7 @@ test "no flags - empty input" {
     std.os.argv = @constCast(argv);
 
     const args = try flagz.parse(Args, allocator);
-    defer flagz.deinit(Args, args, allocator);
+    defer flagz.deinit(args, allocator);
 
     try std.testing.expectEqualStrings("", args.name);
     try std.testing.expectEqual(@as(usize, 0), args.count);
@@ -188,7 +188,7 @@ test "partial flags - some fields set" {
     std.os.argv = @constCast(argv);
 
     const args = try flagz.parse(Args, allocator);
-    defer flagz.deinit(Args, args, allocator);
+    defer flagz.deinit(args, allocator);
 
     try std.testing.expectEqualStrings("hello", args.name);
     try std.testing.expectEqual(@as(usize, 0), args.count);
@@ -226,7 +226,7 @@ test "multiple strings - all freed" {
     std.os.argv = @constCast(argv);
 
     const args = try flagz.parse(Args, allocator);
-    defer flagz.deinit(Args, args, allocator);
+    defer flagz.deinit(args, allocator);
 
     try std.testing.expectEqualStrings("hello", args.name);
     try std.testing.expectEqualStrings("world", args.title);
@@ -258,7 +258,7 @@ test "zero-length strings - empty input" {
     std.os.argv = @constCast(argv);
 
     const args = try flagz.parse(Args, allocator);
-    defer flagz.deinit(Args, args, allocator);
+    defer flagz.deinit(args, allocator);
 
     try std.testing.expectEqualStrings("", args.name);
 }
@@ -293,7 +293,7 @@ test "invalid flag - ignored" {
     std.os.argv = @constCast(argv);
 
     const args = try flagz.parse(Args, allocator);
-    defer flagz.deinit(Args, args, allocator);
+    defer flagz.deinit(args, allocator);
 
     try std.testing.expectEqualStrings("hello", args.name);
     try std.testing.expectEqual(@as(usize, 42), args.count);

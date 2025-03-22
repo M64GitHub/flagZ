@@ -52,7 +52,7 @@ zig build run -- -name hello -count 42 -verbose -tag ziggy
 
 ## Add flagZ To Your Project
 ```sh
-zig fetch --save https://github.com/M64GitHub/flagZ/archive/refs/tags/v0.0.2-alpha.tar.gz
+zig fetch --save https://github.com/M64GitHub/flagZ/archive/refs/tags/v0.1.0-alpha.tar.gz 
 ```
 Adds the dependency to your `build.zig.zon`:
 ```zig

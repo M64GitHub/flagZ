@@ -3,7 +3,7 @@ const std = @import("std");
 pub const Error = error{
     MissingValue,
     StringTooLong,
-    InvalidIntValue, // New custom error
+    InvalidIntValue,
 };
 
 pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {

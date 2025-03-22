@@ -7,7 +7,7 @@ Parses CLI flags into your Zig struct—flag names match field names (e.g., `-na
 
 ## Why flagZ?
 
-Because CLI args shouldn’t suck. Endless loops, conditionals, type juggling—ugh! **flagZ** flips the script: define a struct, and *that’s it*—your CLI interface is set, flags flow in, transparent as can be. No fuss.
+Because CLI args shouldn’t suck. Endless loops, conditionals, type juggling—nope! **flagZ** flips the script: define a struct, and *that’s it*—your CLI interface is set, flags flow in, transparent as can be. No fuss.
 
 ## Example
 

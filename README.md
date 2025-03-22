@@ -39,7 +39,42 @@ pub fn main() !void {
 
 Run: `./example -name hello -count 42 -verbose -tag ziggy`
 
-## Install
 
-Clone this repo and add `flagz.zig` to your project. More soon!
+## Using flagZ in Your Project
+```sh
+zig fetch --save https://github.com/M64GitHub/zigreSID/archive/refs/tags/v0.0.0-alpha.tar.gz
+```
+Adds the dependency to your `build.zig.zon`:
+```zig
+.dependencies = .{
+    .flagz = .{
+        .url = "https://github.com/M64GitHub/zigreSID/archive/refs/tags/v0.0.0-alpha.tar.gz",
+        .hash = "12207fd061a0e099dd70964ef6f508cae2ddd40a98651449ce1fb250abaa70c587bd",
+    },
+},
+```
 
+`build.zig`: import `flagZ` as follows:
+```zig
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    // Add flagZ
+    const dep_flagz = b.dependency("flagz", .{}); 
+    const mod_flagz = dep_flagz.module("flagz");  
+
+    // Your executable
+    const exe = b.addExecutable(.{
+        .name = "e-x-e",
+        .root_source_file = b.path("src/exe.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    // Link flagZ
+    exe.root_module.addImport("flagz", mod_flagz); 
+
+    b.installArtifact(exe);
+}
+```

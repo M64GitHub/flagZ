@@ -40,10 +40,7 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
         if (arg.len > 1 and arg[0] == '-') {
             const flag_name = arg[1..];
             inline for (fields) |field| {
-                const field_name = if (field.name[0] == '.')
-                    field.name[1..]
-                else
-                    field.name;
+                const field_name = field.name;
 
                 if (std.mem.eql(u8, flag_name, field_name)) {
                     switch (@typeInfo(field.type)) {

@@ -38,30 +38,64 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                             @field(result, field.name) = true;
                         },
                         .Int => |_| {
-                            if (arg_index + 1 >= args.len)
+                            if (arg_index + 1 >= args.len) {
+                                inline for (fields) |f| {
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
+                                        allocator.free(@field(result, f.name));
+                                    }
+                                }
                                 return error.MissingValue;
+                            }
                             const value = args[arg_index + 1];
                             @field(result, field.name) =
                                 try std.fmt.parseInt(field.type, value, 10);
                             arg_index += 1;
                         },
                         .Pointer => |ptr| if (ptr.child == u8) {
-                            if (arg_index + 1 >= args.len)
+                            if (arg_index + 1 >= args.len) {
+                                inline for (fields) |f| {
+                                    if (@typeInfo(f.type) ==
+                                        .Pointer and f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
+                                        allocator.free(@field(result, f.name));
+                                    }
+                                }
                                 return error.MissingValue;
+                            }
                             const value = args[arg_index + 1];
                             const copied = try allocator.dupe(u8, value);
                             @field(result, field.name) = copied;
+                            arg_index += 1;
                         },
                         .Array => |arr| if (arr.child == u8) {
-                            if (arg_index + 1 >= args.len)
+                            if (arg_index + 1 >= args.len) {
+                                inline for (fields) |f| {
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
+                                        allocator.free(@field(result, f.name));
+                                    }
+                                }
                                 return error.MissingValue;
+                            }
                             const value = args[arg_index + 1];
-                            if (value.len > arr.len)
+                            if (value.len > arr.len) {
+                                inline for (fields) |f| {
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
+                                        @field(result, f.name).len > 0)
+                                    {
+                                        allocator.free(@field(result, f.name));
+                                    }
+                                }
                                 return error.StringTooLong;
-                            @memcpy(
-                                @field(result, field.name)[0..value.len],
-                                value,
-                            );
+                            }
+                            @memcpy(@field(result, field.name)[0..value.len], value);
                             arg_index += 1;
                         },
                         else => @compileError("Unsupported field type: " ++

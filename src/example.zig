@@ -16,8 +16,8 @@ pub fn main() !void {
     const args = try flagz.parse(Args, allocator);
     defer args.deinit();
 
-    std.debug.print("Name: {s}\n", .{args.name});
-    std.debug.print("Count: {}\n", .{args.count});
-    std.debug.print("Verbose: {} (flags revolution begins!)\n", .{args.verbose});
-    std.debug.print("Tag: {s}\n", .{args.tag});
+    std.debug.print("Name: {s}\n", .{args.values.name});
+    std.debug.print("Count: {}\n", .{args.values.count});
+    std.debug.print("Verbose: {}\n", .{args.values.verbose});
+    std.debug.print("Tag: {s}\n", .{args.values.tag});
 }

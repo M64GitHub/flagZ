@@ -40,7 +40,7 @@ pub fn main() !void {
 Run: `./example -name hello -count 42 -verbose -tag ziggy`
 
 
-## Using flagZ in Your Project
+## How To flagZ Your Project
 ```sh
 zig fetch --save https://github.com/M64GitHub/zigreSID/archive/refs/tags/v0.0.0-alpha.tar.gz
 ```

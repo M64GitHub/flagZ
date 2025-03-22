@@ -58,6 +58,9 @@ const Args = struct {
 
 ```zig
 const args = try flagz.parse(Args, allocator);
+```
+The famous 1-liner:
+```zig
 defer allocator.free(args.name); // Clean up the string
 ```
 

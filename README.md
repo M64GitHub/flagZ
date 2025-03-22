@@ -48,8 +48,8 @@ Adds the dependency to your `build.zig.zon`:
 ```zig
 .dependencies = .{
     .flagz = .{
-        .url = "https://github.com/M64GitHub/flagz/archive/refs/tags/v0.0.2-alpha.tar.gz",
-        .hash = "12207fd061a0e099dd70964ef6f508cae2ddd40a98651449ce1fb250abaa70c587bd",
+        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v0.0.2-alpha.tar.gz",
+        .hash = "122017824624d89917d0e281c85a32c5151900af33621638b4c7c3b355b11cb81cff",
     },
 },
 ```

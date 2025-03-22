@@ -29,7 +29,7 @@ pub fn main() !void {
     };
 
     const args = try flagz.parse(Args, allocator);
-    defer allocator.free(args.name);
+    defer args.deinit();
 
     std.debug.print("Name: {s}\n", .{args.name});
     std.debug.print("Count: {}\n", .{args.count});
@@ -57,10 +57,7 @@ const Args = struct {
 ```
 
 ```zig
-const args = try flagz.parse(Args, allocator);
-```
-The famous 1-liner:
-```zig
-defer allocator.free(args.name); // Clean up the string
+const parsed = try flagz.parse(Args, allocator);
+defer parsed.deinit();
 ```
 

@@ -1,6 +1,23 @@
 const std = @import("std");
 
-pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
+pub fn ParsedArgs(comptime T: type) type {
+    return struct {
+        values: T,
+        allocator: std.mem.Allocator,
+
+        pub fn deinit(self: @This()) void {
+            inline for (std.meta.fields(T)) |field| {
+                if (@typeInfo(field.type) == .Pointer and field.type == []u8) {
+                    if (@field(self.values, field.name).len > 0) {
+                        self.allocator.free(@field(self.values, field.name));
+                    }
+                }
+            }
+        }
+    };
+}
+
+pub fn parse(comptime T: type, allocator: std.mem.Allocator) !ParsedArgs(T) {
     var result: T = undefined;
 
     const args = try std.process.argsAlloc(allocator);
@@ -57,8 +74,8 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                         .Pointer => |ptr| if (ptr.child == u8) {
                             if (arg_index + 1 >= args.len) {
                                 inline for (fields) |f| {
-                                    if (@typeInfo(f.type) ==
-                                        .Pointer and f.type == []u8 and
+                                    if (@typeInfo(f.type) == .Pointer and
+                                        f.type == []u8 and
                                         @field(result, f.name).len > 0)
                                     {
                                         allocator.free(@field(result, f.name));
@@ -95,7 +112,10 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                                 }
                                 return error.StringTooLong;
                             }
-                            @memcpy(@field(result, field.name)[0..value.len], value);
+                            @memcpy(
+                                @field(result, field.name)[0..value.len],
+                                value,
+                            );
                             arg_index += 1;
                         },
                         else => @compileError("Unsupported field type: " ++
@@ -106,5 +126,8 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
         }
     }
 
-    return result;
+    return ParsedArgs(T){
+        .values = result,
+        .allocator = allocator,
+    };
 }

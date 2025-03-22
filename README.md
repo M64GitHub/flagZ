@@ -45,9 +45,10 @@ pub fn main() !void {
 }
 ```
 
-Run: `./example -name hello -count 42 -verbose -tag ziggy`  
-
-
+Run:
+```
+zig build run -- -name hello -count 42  -tag ziggy
+```
 
 ## Add flagZ To Your Project
 ```sh

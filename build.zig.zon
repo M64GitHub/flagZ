@@ -1,5 +1,6 @@
-.{ .name = "flagz", .version = "0.1.0", .dependencies = .{}, .paths = .{
+.{ .name = "flagz", .version = "0.0.0", .dependencies = .{}, .paths = .{
     "src/flagz.zig",
+    "src/test.zig",
     "build.zig",
     "build.zig.zon",
     "README.md",

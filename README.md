@@ -1,3 +1,5 @@
+[![Tests](https://img.shields.io/github/actions/workflow/status/M64GitHub/flagZ/test.yml?label=Tests&style=plastic&color=9900ff)](https://github.com/M64GitHub/flagZ/actions/workflows/test.yml)
+
 # flagZ
 
 Dead-simple flags to Zig structs—no fuss, flags: done!

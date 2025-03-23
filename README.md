@@ -127,6 +127,6 @@ flagZ is MIT—grab it, tweak it, twist it, share it, free as can be! Check [LIC
 
 <br>
 
-Developed with ❤️ by M64 - flagZ-tastic turbocharge your CLI game!
+Developed with ❤️ by M64 - **flagZ**-tastic turbocharge your CLI game!
 
 

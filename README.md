@@ -14,7 +14,10 @@ Because CLI args shouldn’t suck. Loops, conditionals, type chaos? Nope! **flag
 
 Ever hacked a tool and thought, “Ugh, CLI flags—how’d that work again?” Digging through old projects, copy-pasting, tweaking—such a drag! **flagZ** was born to zap that hassle: define a struct, and bam—it’s your CLI **and** your variables, no learning curve, no docs to slog through. It’s not here to out-fancy the big libs—it’s your instant, transparent shortcut to flags without the fuss. **Focus on your code, not the setup**—**flagZ** has your back!
 
-
+## Features
+- Supports `bool`, `usize`, `isize`, `u32`, `i32`, `[]u8`, and `[N]u8` fields.
+- Short flags for `bool` (e.g., `-verbose` or `-v` sets it to `true`).
+- Errors: `MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow` from `std`.
 
 
 ## Example

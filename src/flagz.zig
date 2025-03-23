@@ -1,5 +1,7 @@
 const std = @import("std");
 
+pub const version = "1.0.0";
+
 pub const Error = error{
     MissingValue,
     StringTooLong,

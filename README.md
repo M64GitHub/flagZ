@@ -72,10 +72,9 @@ Rate (f64): 1e-3
 Verbose: true
 Tag: ziggy
 ```
+## Battle-Tested: flagZ vs. The World
 
-## Battle-Tested
-
-**flagZ**’s got 22 tests hitting every corner—happy flags, wild edge cases, overflows, the works! From `usize` to `f64`, it’s rock-solid and leak-free. Flags flow, no flops!
+**flagZ** flexes 22 tests—smooth flags, tricky cases, overflows, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags in, flawless out!
 
 
 ## Add flagZ To Your Project

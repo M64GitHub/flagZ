@@ -125,6 +125,8 @@ pub fn build(b: *std.Build) void {
 
 flagZ is MIT—grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.  
 
-Developed with ❤️ by M64 - flagZ-tastic turbocharge for your CLI game!
+---
+
+Developed with ❤️ by M64 - flagZ-tastic turbocharge your CLI game!
 
 

@@ -127,6 +127,6 @@ pub fn build(b: *std.Build) void {
 
 <br>
 
-Developed with ❤️ by M64 - **flagZ**-tastic turbocharge your CLI game!
+Developed with ❤️ by M64 - **flagZ-tastic** turbocharge your CLI game!
 
 

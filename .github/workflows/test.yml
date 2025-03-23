@@ -3,8 +3,12 @@ name: Tests
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - 'README.md'  # Skip if only README changes
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - 'README.md'  # Ditto for PRs
 
 jobs:
   test:

@@ -123,7 +123,7 @@ pub fn build(b: *std.Build) void {
 ```
 ## License
 
-flagZ is MIT—grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.  
+**flagZ** is **MIT**—grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.  
 
 <br>
 

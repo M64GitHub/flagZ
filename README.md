@@ -16,7 +16,7 @@ Ever hacked a tool and thought, “Ugh, CLI flags—how’d that work again?” 
 
 ## Features
 - Supports `bool`, `usize`, `isize`, `u32`, `i32`, `[]u8`, and `[N]u8` fields.
-- Short flags for `bool` (e.g., `-verbose` or `-v` sets it to `true`).
+- Short flags for `bool` zap to true (e.g., `-verbose` or `-v`).
 - Errors: `MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow` from `std`.
 
 

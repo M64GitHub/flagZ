@@ -53,11 +53,11 @@ pub fn main() !void {
 
 Run:
 ```bash
-zig build run -- -name hello -count 42 -offset -10 -limit 1000 -shift -500 -tag ziggy
+zig build run -- -name "flagZ rockZ"  -count 42 -offset -10 -limit 1000 -shift -500 -tag ziggy
 ```
 Output:
 ```
-Name: hello
+Name: flagZ rockZ
 Count (usize): 42
 Offset (isize): -10
 Limit (u32): 1000

@@ -107,7 +107,6 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(exe);
 }
 ```
-
 ## License
 
-This project is licensed under the MIT License—see the [LICENSE](LICENSE) file for details.
+flagZ is MIT—grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.

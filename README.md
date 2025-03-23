@@ -6,7 +6,6 @@
 ![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
 
 Dead-simple flags to Zig structs—no fuss, flags: done!
-Developed with 💜 by M64—flags zap, no flops!
 
 ## What It Does
 Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`) parsed, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. Supports any fields you define!

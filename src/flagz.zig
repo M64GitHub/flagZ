@@ -18,7 +18,10 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
     defer std.process.argsFree(arena_allocator, args);
 
     errdefer inline for (std.meta.fields(T)) |field| {
-        if (@typeInfo(field.type) == .pointer and (field.type == []u8 or field.type == []const u8) and @field(result, field.name).len > 0) {
+        if (@typeInfo(field.type) == .pointer and
+            (field.type == []u8 or field.type == []const u8) and
+            @field(result, field.name).len > 0)
+        {
             allocator.free(@field(result, field.name));
         }
     };
@@ -38,7 +41,9 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
             .pointer => |ptr| if (ptr.child == u8) {
                 @field(result, field.name) = "";
             },
-            else => @compileError("Unsupported field type: " ++ @typeName(field.type)),
+            else => @compileError(
+                "Unsupported field type: " ++ @typeName(field.type),
+            ),
         }
     }
 
@@ -50,7 +55,11 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
         inline for (fields) |field| {
             // Match if flag_name is exact or a prefix of field.name
             if (std.mem.eql(u8, flag_name, field.name) or
-                (flag_name.len < field.name.len and std.mem.startsWith(u8, field.name, flag_name)))
+                (flag_name.len < field.name.len and std.mem.startsWith(
+                    u8,
+                    field.name,
+                    flag_name,
+                )))
             {
                 switch (@typeInfo(field.type)) {
                     .bool => {
@@ -59,28 +68,44 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                     .int => |_| {
                         if (arg_index + 1 >= args.len) return error.MissingValue;
                         const next_arg = args[arg_index + 1];
-                        if (next_arg.len > 1 and next_arg[0] == '-' and std.ascii.isAlphabetic(next_arg[1])) {
+                        if (next_arg.len > 1 and next_arg[0] == '-' and
+                            std.ascii.isAlphabetic(next_arg[1]))
+                        {
                             return error.MissingValue;
                         }
                         const value = next_arg;
-                        const parsed = std.fmt.parseInt(i64, value, 10) catch |err| switch (err) {
+                        const parsed = std.fmt.parseInt(
+                            i64,
+                            value,
+                            10,
+                        ) catch |err| switch (err) {
                             error.InvalidCharacter => return error.InvalidIntValue,
                             else => return err,
                         };
-                        if (parsed < 0 and @typeInfo(field.type).int.signedness == .unsigned) {
+                        if (parsed < 0 and
+                            @typeInfo(field.type).int.signedness == .unsigned)
+                        {
                             return error.NegativeValueNotAllowed;
                         }
-                        @field(result, field.name) = std.math.cast(field.type, parsed) orelse return error.Overflow;
+                        @field(result, field.name) = std.math.cast(
+                            field.type,
+                            parsed,
+                        ) orelse return error.Overflow;
                         arg_index += 1;
                     },
                     .float => |_| {
                         if (arg_index + 1 >= args.len) return error.MissingValue;
                         const next_arg = args[arg_index + 1];
-                        if (next_arg.len > 1 and next_arg[0] == '-' and std.ascii.isAlphabetic(next_arg[1])) {
+                        if (next_arg.len > 1 and next_arg[0] == '-' and
+                            std.ascii.isAlphabetic(next_arg[1]))
+                        {
                             return error.MissingValue;
                         }
                         const value = next_arg;
-                        const parsed = std.fmt.parseFloat(field.type, value) catch |err| switch (err) {
+                        const parsed = std.fmt.parseFloat(
+                            field.type,
+                            value,
+                        ) catch |err| switch (err) {
                             error.InvalidCharacter => return error.InvalidIntValue,
                             else => return err,
                         };
@@ -91,7 +116,9 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                     .pointer => |ptr| if (ptr.child == u8) {
                         if (arg_index + 1 >= args.len) return error.MissingValue;
                         const next_arg = args[arg_index + 1];
-                        if (next_arg.len > 1 and next_arg[0] == '-' and std.ascii.isAlphabetic(next_arg[1])) {
+                        if (next_arg.len > 1 and next_arg[0] == '-' and
+                            std.ascii.isAlphabetic(next_arg[1]))
+                        {
                             return error.MissingValue;
                         }
                         const value = next_arg;
@@ -105,7 +132,9 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                     .array => |arr| if (arr.child == u8) {
                         if (arg_index + 1 >= args.len) return error.MissingValue;
                         const next_arg = args[arg_index + 1];
-                        if (next_arg.len > 1 and next_arg[0] == '-' and std.ascii.isAlphabetic(next_arg[1])) {
+                        if (next_arg.len > 1 and next_arg[0] == '-' and
+                            std.ascii.isAlphabetic(next_arg[1]))
+                        {
                             return error.MissingValue;
                         }
                         const value = next_arg;
@@ -113,7 +142,8 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                         @memcpy(@field(result, field.name)[0..value.len], value);
                         arg_index += 1;
                     },
-                    else => @compileError("Unsupported field type: " ++ @typeName(field.type)),
+                    else => @compileError("Unsupported field type: " ++
+                        @typeName(field.type)),
                 }
                 break; // Stop after first match
             }

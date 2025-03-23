@@ -12,6 +12,8 @@ pub fn main() !void {
         offset: isize,
         limit: u32,
         shift: i32,
+        temp: f32,
+        rate: f64,
         verbose: bool,
         tag: [8]u8,
     };
@@ -24,6 +26,8 @@ pub fn main() !void {
     std.debug.print("Offset (isize): {}\n", .{args.offset});
     std.debug.print("Limit (u32): {}\n", .{args.limit});
     std.debug.print("Shift (i32): {}\n", .{args.shift});
+    std.debug.print("Temp (f32): {}\n", .{args.temp});
+    std.debug.print("Rate (f64): {}\n", .{args.rate});
     std.debug.print("Verbose: {}\n", .{args.verbose});
     std.debug.print("Tag: {s}\n", .{args.tag});
 }

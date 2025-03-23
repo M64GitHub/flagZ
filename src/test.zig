@@ -8,6 +8,8 @@ test "normal case - all fields set" {
         offset: isize,
         limit: u32,
         shift: i32,
+        temp: f32,
+        rate: f64,
         verbose: bool,
         tag: [8]u8,
     };
@@ -29,6 +31,10 @@ test "normal case - all fields set" {
             "1000",
             "-shift",
             "-500",
+            "-temp",
+            "23.5",
+            "-rate",
+            "0.001",
             "-verbose",
             "-tag",
             "ziggy",
@@ -50,6 +56,8 @@ test "normal case - all fields set" {
     try std.testing.expectEqual(@as(isize, -10), args.offset);
     try std.testing.expectEqual(@as(u32, 1000), args.limit);
     try std.testing.expectEqual(@as(i32, -500), args.shift);
+    try std.testing.expectEqual(@as(f32, 23.5), args.temp);
+    try std.testing.expectEqual(@as(f64, 0.001), args.rate);
     try std.testing.expectEqual(true, args.verbose);
     try std.testing.expectEqual([8]u8{ 'z', 'i', 'g', 'g', 'y', 0, 0, 0 }, args.tag);
 }
@@ -84,10 +92,10 @@ test "missing value - flag with no value" {
     try std.testing.expectError(error.MissingValue, result);
 }
 
-test "invalid int - non-numeric input for isize" {
+test "invalid int - non-numeric input for usize" {
     const Args = struct {
         name: []u8,
-        offset: isize,
+        count: usize,
     };
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -99,7 +107,7 @@ test "invalid int - non-numeric input for isize" {
             "prog",
             "-name",
             "hello",
-            "-offset",
+            "-count",
             "xxx",
         };
         var list = try allocator.alloc([*:0]u8, args.len);
@@ -150,6 +158,8 @@ test "no flags - empty input" {
         offset: isize,
         limit: u32,
         shift: i32,
+        temp: f32,
+        rate: f64,
         verbose: bool,
     };
 
@@ -176,6 +186,8 @@ test "no flags - empty input" {
     try std.testing.expectEqual(@as(isize, 0), args.offset);
     try std.testing.expectEqual(@as(u32, 0), args.limit);
     try std.testing.expectEqual(@as(i32, 0), args.shift);
+    try std.testing.expectEqual(@as(f32, 0.0), args.temp);
+    try std.testing.expectEqual(@as(f64, 0.0), args.rate);
     try std.testing.expectEqual(false, args.verbose);
 }
 
@@ -186,6 +198,8 @@ test "partial flags - some fields set" {
         offset: isize,
         limit: u32,
         shift: i32,
+        temp: f32,
+        rate: f64,
         verbose: bool,
     };
 
@@ -200,6 +214,8 @@ test "partial flags - some fields set" {
             "hello",
             "-offset",
             "-42",
+            "-temp",
+            "3.14",
         };
         var list = try allocator.alloc([*:0]u8, args.len);
         for (args, 0..) |arg, i| {
@@ -218,6 +234,8 @@ test "partial flags - some fields set" {
     try std.testing.expectEqual(@as(isize, -42), args.offset);
     try std.testing.expectEqual(@as(u32, 0), args.limit);
     try std.testing.expectEqual(@as(i32, 0), args.shift);
+    try std.testing.expectEqual(@as(f32, 3.14), args.temp);
+    try std.testing.expectEqual(@as(f64, 0.0), args.rate);
     try std.testing.expectEqual(false, args.verbose);
 }
 
@@ -670,5 +688,67 @@ test "overflow - i32 too small" {
     std.os.argv = @constCast(argv);
 
     const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.Overflow, result);
+}
+
+test "invalid float - non-numeric input for f32" {
+    const Args = struct {
+        name: []u8,
+        temp: f32,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-name",
+            "hello",
+            "-temp",
+            "xyz",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.InvalidIntValue, result);
+}
+
+test "overflow - f64 too large" {
+    const Args = struct {
+        name: []u8,
+        rate: f64,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-name",
+            "hello",
+            "-rate", "1e309", // Beyond f64 max (~1.8e308)
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    if (result) |args| flagz.deinit(args, allocator) else |_| {} // No semicolon here!
     try std.testing.expectError(error.Overflow, result);
 }

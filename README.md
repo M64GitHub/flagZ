@@ -15,11 +15,9 @@ Because CLI args shouldn’t suck. Loops, conditionals, type chaos? Nope! **flag
 Ever hacked a tool and thought, “Ugh, CLI flags—how’d that work again?” Digging through old projects, copy-pasting, tweaking—such a drag! **flagZ** was born to zap that hassle: define a struct, and bam—it’s your CLI **and** your variables, no learning curve, no docs to slog through. It’s not here to out-fancy the big libs—it’s your instant, transparent shortcut to flags without the fuss. **Focus on your code, not the setup**—**flagZ** has your back!
 
 ## Features
-- Supports `bool`, `usize`, `isize`, `u32`, `i32`, `[]u8`, and `[N]u8` fields.
-- Short flags for `bool` zap to true (e.g., `-verbose` or `-v`).
-- Errors: `MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow` from `std`.
-
-
+- Supports `bool`, `usize`, `isize`, `u32`, `i32`, `f32`, `f64`, `[]u8`, and `[N]u8` fields.
+- Short flags for `bool` zap to `true` (`-v` or `-verbose`).
+- Errors (`MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow`).
 ## Example
 
 ```zig
@@ -37,6 +35,8 @@ pub fn main() !void {
         offset: isize,
         limit: u32,
         shift: i32,
+        temp: f32,
+        rate: f64,
         verbose: bool,
         tag: [8]u8,
     };
@@ -49,6 +49,8 @@ pub fn main() !void {
     std.debug.print("Offset (isize): {}\n", .{args.offset});
     std.debug.print("Limit (u32): {}\n", .{args.limit});
     std.debug.print("Shift (i32): {}\n", .{args.shift});
+    std.debug.print("Temp (f32): {}\n", .{args.temp});
+    std.debug.print("Rate (f64): {}\n", .{args.rate});
     std.debug.print("Verbose: {}\n", .{args.verbose});
     std.debug.print("Tag: {s}\n", .{args.tag});
 }
@@ -56,18 +58,25 @@ pub fn main() !void {
 
 Run:
 ```bash
-zig build run -- -name "flagZ rockZ"  -count 42 -offset -10 -limit 1000 -shift -500 -tag ziggy -verbose
+zig build run -- -name "floatZ rockZ" -count 42 -offset -10 -limit 1000 -shift -500 -temp 23.5 -rate 0.001 -verbose -tag ziggy
 ```
 Output:
 ```
-Name: flagZ rockZ
+Name: floatZ rockZ
 Count (usize): 42
 Offset (isize): -10
 Limit (u32): 1000
 Shift (i32): -500
+Temp (f32): 2.35e1
+Rate (f64): 1e-3
 Verbose: true
 Tag: ziggy
 ```
+
+## Battle-Tested
+
+**flagZ**’s got 22 tests hitting every corner—happy flags, wild edge cases, overflows, the works! From `usize` to `f64`, it’s rock-solid and leak-free. Flags flow, no flops!
+
 
 ## Add flagZ To Your Project
 ```sh

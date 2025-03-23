@@ -8,10 +8,10 @@ pub fn main() !void {
 
     const Args = struct {
         name: []const u8,
-        count: usize, // Unsigned, no negatives allowed
-        offset: isize, // Signed, allows negatives
-        limit: u32, // Smaller unsigned, 0 to 2^32 - 1
-        shift: i32, // Smaller signed, -2^31 to 2^31 - 1
+        count: usize,
+        offset: isize,
+        limit: u32,
+        shift: i32,
         verbose: bool,
         tag: [8]u8,
     };

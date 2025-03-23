@@ -53,7 +53,7 @@ pub fn main() !void {
 
 Run:
 ```bash
-zig build run -- -name "flagZ rockZ"  -count 42 -offset -10 -limit 1000 -shift -500 -tag ziggy
+zig build run -- -name "flagZ rockZ"  -count 42 -offset -10 -limit 1000 -shift -500 -tag ziggy -verbose
 ```
 Output:
 ```
@@ -62,7 +62,7 @@ Count (usize): 42
 Offset (isize): -10
 Limit (u32): 1000
 Shift (i32): -500
-Verbose: false
+Verbose: true
 Tag: ziggy
 ```
 

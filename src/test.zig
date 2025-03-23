@@ -752,3 +752,251 @@ test "overflow - f64 too large" {
     if (result) |args| flagz.deinit(args, allocator) else |_| {} // No semicolon here!
     try std.testing.expectError(error.Overflow, result);
 }
+
+test "single dash - ignored" {
+    const Args = struct {
+        name: []u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-",
+            "value",
+            "-name",
+            "hello",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqualStrings("hello", args.name);
+}
+
+test "empty flag name - ignored" {
+    const Args = struct {
+        name: []u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "--",
+            "value",
+            "-name",
+            "hello",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqualStrings("hello", args.name);
+}
+
+test "zero-length value after flag - invalid" {
+    const Args = struct {
+        count: usize,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-count",
+            "",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.InvalidIntValue, result);
+}
+
+test "whitespace-only string" {
+    const Args = struct {
+        name: []u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-name",
+            "  ",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqualStrings("  ", args.name);
+}
+
+test "smallest non-zero f32" {
+    const Args = struct {
+        temp: f32,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-temp", "1.4e-45", // Smallest positive f32
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(f32, 1.4e-45), args.temp);
+}
+
+test "multiple same-type flags - last wins" {
+    const Args = struct {
+        count: usize,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-count",
+            "1",
+            "-count",
+            "2",
+            "-count",
+            "3",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(usize, 3), args.count);
+}
+
+test "mixed valid and invalid flags" {
+    const Args = struct {
+        name: []u8,
+        count: usize,
+        verbose: bool,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-name",
+            "hello",
+            "-count",   "xyz", // Invalid
+            "-verbose",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.InvalidIntValue, result);
+}
+
+test "huge string allocation" {
+    const Args = struct {
+        name: []u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const huge_string = "a" ** 1024; // 1KB string
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-name",
+            huge_string,
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqualStrings(huge_string, args.name);
+}

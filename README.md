@@ -74,7 +74,7 @@ Tag: ziggy
 ```
 ## Battle-Tested: flagZ vs. The World
 
-**flagZ** flexes 22 tests—smooth flags, tricky cases, overflows, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags in, flawless out!
+**flagZ** nails 30 tests—smooth flags, tricky cases, overflows, weird, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags drop, flawless pop!
 
 
 ## Add flagZ To Your Project

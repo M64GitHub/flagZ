@@ -91,8 +91,8 @@ Adds the dependency to your `build.zig.zon`:
 ```zig
 .dependencies = .{
     .flagz = .{
-        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v0.1.0-alpha.tar.gz",
-        .hash = "flagz-0.1.0-vdU1bJ9KAAAFSkBuPA54O65FBsuk8SAwzIhYiZp5Ron-",
+        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz",
+        .hash = "flagz-1.0.0-vdU1bOaqAADgZG1WzQsfTlTe91FDMqB4gqozYT59tzEK",
     },
 },
 ```

@@ -3,7 +3,7 @@
 Dead-simple flags to Zig structs—no fuss, flags: done!
 
 ## What It Does
-Parses CLI flags into your Zig struct—flag names match field names (e.g., `-name` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`) parsed, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. Supports any fields you define!
+Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`) parsed, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. Supports any fields you define!
 
 ## What It Does Not
 No `--` flags, no fancy options, no bells or whistles. That’s on purpose—**flagZ** strips it down to dead-simple: your struct, your flags, done. Need more? Grab a full-featured lib—this is for quick, brain-dead-easy parsing, no headaches allowed!
@@ -16,8 +16,9 @@ Ever hacked a tool and thought, “Ugh, CLI flags—how’d that work again?” 
 
 ## Features
 - Supports `bool`, `usize`, `isize`, `u32`, `i32`, `f32`, `f64`, `[]u8`, and `[N]u8` fields.
-- Short flags for `bool` zap to `true` (`-v` or `-verbose`).
+- Short flags fuzzy zap (`-v` flips `verbose`, `-n` fills `name`—first match wins!).
 - Errors (`MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow` from `std`).
+
 ## Example
 
 ```zig
@@ -74,7 +75,7 @@ Tag: ziggy
 ```
 ## Battle-Tested: flagZ vs. The World
 
-**flagZ** nails 30 tests—smooth flags, tricky cases, overflows, weird, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags drop, flawless pop!
+**flagZ** nails 34 tests—smooth flags, tricky cases, overflows, weird, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags drop, flawless pop!
 
 
 ## Add flagZ To Your Project

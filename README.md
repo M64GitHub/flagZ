@@ -24,7 +24,7 @@ Optional fields (`?T`) are `null` if unset; others are initialized to 0, "", or 
 
 ## Why flagZ?
 
-Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, not a rival to full-featured libraries.
+Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, distinct from full-featured libraries.
 
 
 ## Examples

@@ -122,7 +122,7 @@ Verbose: false
 
 ## flagZ vs. The World
 
-**flagZ** nails 48 tests—smooth flags, tricky cases, overflows, huge buffer inputs, all crushed! From `usize` to `f64`.
+**flagZ** nails 48 tests—smooth flags, tricky cases, overflows, huge buffer inputs, all crushed! From bits to floats.
 
 
 ## Add flagZ To Your Project

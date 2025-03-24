@@ -1,5 +1,5 @@
 const std = @import("std");
-const flagz = @import("flagz.zig");
+const flagz = @import("flagz");
 
 test "normal case - all fields set" {
     const Args = struct {

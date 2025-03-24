@@ -131,7 +131,7 @@ Adds the dependency to your `build.zig.zon`:
 ```zig
 .dependencies = .{
     .flagz = .{
-        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.1.0.tar.gz",
+        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz",
         .hash = "flagz-1.1.0-vdU1bKYQAQDVVb3UBuxamQwQ85AfhK-khpo075K2ympj",
     },
 },

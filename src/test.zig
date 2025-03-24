@@ -1449,3 +1449,141 @@ test "non-optional array string set" {
 
     try std.testing.expectEqual([8]u8{ 'z', 'i', 'g', 'g', 'y', 0, 0, 0 }, args.tag);
 }
+
+test "optional isize set and unset" {
+    const Args = struct {
+        offset: ?isize,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-offset",
+            "-42",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(?isize, -42), args_set.offset);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(null, args_unset.offset);
+}
+
+test "optional u32 set and unset" {
+    const Args = struct {
+        limit: ?u32,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-limit",
+            "1000",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(?u32, 1000), args_set.limit);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(null, args_unset.limit);
+}
+
+test "optional i32 set and unset" {
+    const Args = struct {
+        shift: ?i32,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-shift",
+            "-500",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(?i32, -500), args_set.shift);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(null, args_unset.shift);
+}

@@ -122,7 +122,7 @@ Verbose: false
 
 ## flagZ vs. The World
 
-**flagZ** nails 45 tests—smooth flags, tricky cases, overflows, weird, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags drop, flawless pop!
+**flagZ** nails 48 tests—smooth flags, tricky cases, overflows, weird, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags drop, flawless pop!
 
 
 ## Add flagZ To Your Project

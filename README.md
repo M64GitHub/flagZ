@@ -8,7 +8,7 @@
 Dead-simple flags to Zig structs—no fuss, flags: done!
 
 ## What It Does
-Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings are allocated, integers parsed, floats zapped, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. See below for all supported types.  
+Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings are allocated, integers and floats parsed, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. See below for all supported types.  
 
 Optional fields (`?T`) stay `null` if unset, others get defaults (`0`, `""`, `false`). 
 
@@ -17,13 +17,12 @@ No `--` flags, no fancy options, no bells or whistles. That’s on purpose—**f
 
 ## Why flagZ?
 
-Because CLI args shouldn’t suck. Loops, conditionals, type chaos? Nope! **flagZ** flips the script: define a struct, and boom your CLI interface is set, flags flow in, transparent as can be. No fuss.  
-
-Ever hacked a tool and thought, “Ugh, CLI flags—how’d that work again?” Digging through old projects, copy-pasting, tweaking—such a drag! **flagZ** was born to zap that hassle: define a struct, and bam—it’s your CLI **and** your variables, no learning curve, no docs to slog through. It’s not here to out-fancy the big libs—it’s your instant, transparent shortcut to flags without the fuss. **Focus on your code, not the setup**—**flagZ** has your back!
+On flags, **flagZ** tries to flip the script: define a struct, and boom your CLI interface and varieables are set, flags flow in, transparent as can be. No fuss.  
+No learning curve, no docs to slog through. It’s not here to out-fancy the big libs—it’s your instant, transparent shortcut to flags without the fuss. **Focus on your code, not the setup**—**flagZ** has your back!
 
 ## Features
 - Supports `bool`, all integers (`u1` to `u64`, `i1` to `i64`, `usize`, `isize`), floats (`f32`, `f64`), strings (`[]u8`, `[N]u8`), as well as their optional types.
-- Short flags fuzzy zap (`-v` flips `verbose`, `-n` fills `name`—first match wins!).
+- Short flags fuzzy match (`-v` flips `verbose`, `-n` fills `name`—first match wins!).
 - Errors (`MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow` from `std`).
 
 ## Examples
@@ -121,11 +120,6 @@ Count set: 100
 Verbose: false
 ```
 
-## flagZ vs. The World
-
-**flagZ** nails 48 tests—smooth flags, tricky cases, overflows, huge buffer inputs, all crushed! From bits to floats.
-
-
 ## Add flagZ To Your Project
 ```sh
 zig fetch --save https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.1.0.tar.gz
@@ -168,57 +162,7 @@ pub fn build(b: *std.Build) void {
 
 ## Reference: Supported Types
 
-### Booleans
-- **`bool`**—Flips to `true` with flag (e.g., `-verbose`), defaults to `false` if unset.
-- **`?bool`**—Sets to `true` with flag, `null` if unset.
-
-### Integers (Unsigned)
-- **`usize`**—Parsed with `parseInt(i64)`, defaults to `0` if unset.
-- **`u1`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-1 range).
-- **`u2`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-3 range).
-- **`u4`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-15 range).
-- **`u8`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-255 range).
-- **`u16`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-65535 range).
-- **`u32`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-4294967295 range).
-- **`u64`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-2^64-1 range).
-- **`?usize`**—Parsed with `parseInt(i64)`, `null` if unset, else value.
-- **`?u1`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-1.
-- **`?u2`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-3.
-- **`?u4`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-15.
-- **`?u8`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-255.
-- **`?u16`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-65535.
-- **`?u32`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-4294967295.
-- **`?u64`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-2^64-1.
-
-### Integers (Signed)
-- **`isize`**—Parsed with `parseInt(i64)`, defaults to `0` if unset.
-- **`i1`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-1 to 0 range).
-- **`i2`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-2 to 1 range).
-- **`i4`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-8 to 7 range).
-- **`i8`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-128 to 127 range).
-- **`i16`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-32768 to 32767 range).
-- **`i32`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-2147483648 to 2147483647 range).
-- **`i64`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-2^63 to 2^63-1 range).
-- **`?isize`**—Parsed with `parseInt(i64)`, `null` if unset, else value.
-- **`?i1`**—Parsed with `parseInt(i64)`, `null` if unset, else -1 to 0.
-- **`?i2`**—Parsed with `parseInt(i64)`, `null` if unset, else -2 to 1.
-- **`?i4`**—Parsed with `parseInt(i64)`, `null` if unset, else -8 to 7.
-- **`?i8`**—Parsed with `parseInt(i64)`, `null` if unset, else -128 to 127.
-- **`?i16`**—Parsed with `parseInt(i64)`, `null` if unset, else -32768 to 32767.
-- **`?i32`**—Parsed with `parseInt(i64)`, `null` if unset, else -2147483648 to 2147483647.
-- **`?i64`**—Parsed with `parseInt(i64)`, `null` if unset, else -2^63 to 2^63-1.
-
-### Floats
-- **`f32`**—Parsed with `parseFloat`, defaults to `0.0` if unset.
-- **`f64`**—Parsed with `parseFloat`, defaults to `0.0` if unset.
-- **`?f32`**—Parsed with `parseFloat`, `null` if unset, else value.
-- **`?f64`**—Parsed with `parseFloat`, `null` if unset, else value.
-
-### Strings
-- **`[]u8`**—Allocated with `dupe`, defaults to `""` if unset.
-- **`?[]u8`**—Allocated with `dupe`, `null` if unset, else value.
-- **`[N]u8`** (e.g., `[8]u8`)—Copied with `memcpy`, defaults to all zeros if unset (e.g., `[0]u8{0...}`).
-
+...
 
 ## License
 

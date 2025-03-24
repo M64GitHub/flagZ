@@ -19,7 +19,7 @@ flagZ omits double-dash `--` flags, advanced options, and extra features by desi
 
 ## Why flagZ?
 
-Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. flagZ seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, not a rival to full-featured libraries.
+Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, not a rival to full-featured libraries.
 
 ## Features
 - Supports `bool`, all integers (`u1` to `u64`, `i1` to `i64`, `usize`, `isize`), floats (`f32`, `f64`), strings (`[]u8`, `[N]u8`), as well as their optional types.

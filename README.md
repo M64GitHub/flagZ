@@ -14,12 +14,12 @@ Parses CLI flags into your Zig struct with fuzzy flag-name matching (e.g., `-nam
 Optional fields (`?T`) are `null` if unset; others are initialized to 0, "", or `false` to ensure defined behavior.
 
 ## What It Does Not
-No `--` flags, no fancy options, no bells or whistles. That’s on purpose—**flagZ** strips it down to dead-simple: your struct, your flags, done. Need more? Grab a full-featured lib—this is for quick, brain-dead-easy parsing, no headaches allowed!
+
+flagZ omits double-dash `--` flags, advanced options, and extra features by design. It focuses solely on straightforward struct-based flag parsing. For complex needs, use a comprehensive library—flagZ prioritizes simplicity and efficiency over extensive functionality.
 
 ## Why flagZ?
 
-**flagZ** goal is to try to flip the script: define a struct, and boom your CLI interface and varieables are set, flags flow in, transparent as can be. No fuss.  
-No learning curve, no docs to slog through. It’s not here to out-fancy the big libs—it’s your instant, transparent shortcut to flags without the fuss. **Focus on your code, not the setup**—**flagZ** has your back!
+Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. flagZ seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, not a rival to full-featured libraries.
 
 ## Features
 - Supports `bool`, all integers (`u1` to `u64`, `i1` to `i64`, `usize`, `isize`), floats (`f32`, `f64`), strings (`[]u8`, `[N]u8`), as well as their optional types.

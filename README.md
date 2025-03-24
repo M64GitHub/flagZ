@@ -1,7 +1,7 @@
 # flagZ
 
 ![Tests](https://github.com/M64GitHub/flagZ/actions/workflows/test.yml/badge.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat)
+![Version](https://img.shields.io/badge/version-1.1.0-blue?style=flat)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
 

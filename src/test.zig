@@ -1587,3 +1587,563 @@ test "optional i32 set and unset" {
     defer flagz.deinit(args_unset, allocator);
     try std.testing.expectEqual(null, args_unset.shift);
 }
+
+test "u128 full range" {
+    const Args = struct {
+        huge: u128,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-huge", "340282366920938463463374607431768211455", // u128 max
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(u128, 340282366920938463463374607431768211455), args.huge);
+}
+
+test "i128 full range" {
+    const Args = struct {
+        big: i128,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-big", "-170141183460469231731687303715884105728", // i128 min
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(i128, -170141183460469231731687303715884105728), args.big);
+}
+
+test "?u1024 full range" {
+    const Args = struct {
+        giant: ?u1024,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-giant", "179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137215", // u1024 max
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(u1024, 179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137215), args.giant.?);
+}
+
+test "?u1024 large value" {
+    const Args = struct {
+        giant: ?u1024,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-giant", "10715086071862673209484250490600018105614048117055336074437503883703510511249361224931983788156958581275946729175531468251871452856923140435984577574698574803934567774824230985421074605062371141877954182153046474983581941267398767559165543946077062914571196477686542167660429831652624386837205668069376", // 2^1000
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(u1024, 10715086071862673209484250490600018105614048117055336074437503883703510511249361224931983788156958581275946729175531468251871452856923140435984577574698574803934567774824230985421074605062371141877954182153046474983581941267398767559165543946077062914571196477686542167660429831652624386837205668069376), args.giant.?);
+}
+
+test "u16 set and unset" {
+    const Args = struct {
+        mid: u16,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-mid", "65535", // u16 max
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(u16, 65535), args_set.mid);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(@as(u16, 0), args_unset.mid);
+}
+
+test "?u16 set and unset" {
+    const Args = struct {
+        mid: ?u16,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-mid", "65535", // u16 max
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(?u16, 65535), args_set.mid);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(null, args_unset.mid);
+}
+
+test "i16 set and unset" {
+    const Args = struct {
+        small: i16,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-small", "-32768", // i16 min
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(i16, -32768), args_set.small);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(@as(i16, 0), args_unset.small);
+}
+
+test "?i16 set and unset" {
+    const Args = struct {
+        small: ?i16,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-small", "32767", // i16 max
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(?i16, 32767), args_set.small);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(null, args_unset.small);
+}
+
+test "i3 set and unset" {
+    const Args = struct {
+        odd: i3,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-odd", "-4", // i3 min (-4 to 3)
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(i3, -4), args_set.odd);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(@as(i3, 0), args_unset.odd);
+}
+
+test "?i3 set and unset" {
+    const Args = struct {
+        odd: ?i3,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv_set = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-odd", "3", // i3 max (-4 to 3)
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_set);
+    std.os.argv = @constCast(argv_set);
+
+    const args_set = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_set, allocator);
+    try std.testing.expectEqual(@as(?i3, 3), args_set.odd);
+
+    const argv_unset = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv_unset);
+    std.os.argv = @constCast(argv_unset);
+
+    const args_unset = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args_unset, allocator);
+    try std.testing.expectEqual(null, args_unset.odd);
+}
+test "u500 large value" {
+    const Args = struct {
+        wild: u500,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-wild", "2582249878086908589655919172003011874329705792829223512830659356540647622016841194629645353280137831435903171972747493376", // 2^400
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    var expected: u500 = 1;
+    for (0..400) |_| {
+        expected <<= 1;
+    }
+    try std.testing.expectEqual(expected, args.wild);
+}
+
+test "?u1024 runtime large value" {
+    const Args = struct {
+        giant: ?u1024,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-giant", "179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137215", // 2^1023
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    var expected: u1024 = 1;
+    for (0..1023) |_| { // 1023 shifts = 2^1023
+        expected <<= 1;
+    }
+    // Expected matches input: 2^1023
+    try std.testing.expectEqual(@as(u1024, 179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137215), args.giant.?);
+}
+
+test "u128 overflow" {
+    const Args = struct {
+        huge: u128,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-huge", "340282366920938463463374607431768211456", // 2^128
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.Overflow, result);
+}
+
+test "i128 overflow" {
+    const Args = struct {
+        big: i128,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-big", "170141183460469231731687303715884105728", // 2^127
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.Overflow, result);
+}
+
+test "u500 overflow" {
+    const Args = struct {
+        wild: u500,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-wild", "3273390607896141870013189696827599152216642046043064789483291368096133796404674554883270092325904157150886684127560071009217256545885393053328527589377", // 2^498 + 1
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.Overflow, result);
+}
+
+test "?u1024 overflow" {
+    const Args = struct {
+        giant: ?u1024,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-giant", "179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137216", // 2^1024
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const result = flagz.parse(Args, allocator);
+    try std.testing.expectError(error.Overflow, result);
+}

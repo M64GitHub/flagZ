@@ -1,8 +1,8 @@
 # flagZ
 
 ![Tests](https://github.com/M64GitHub/flagZ/actions/workflows/test.yml/badge.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-8a2be2?style=flat)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)
+![Version](https://img.shields.io/badge/version-1.0.0-8a2be2?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
 
 Field names define flags in Zig structs—simple, direct parsing. Aiming to simplify to its core.

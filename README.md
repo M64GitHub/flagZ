@@ -9,6 +9,7 @@ Dead-simple flags to Zig structs—no fuss, flags: done!
 
 ## What It Does
 Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`, `isize`) parsed, floats (`f32`, `f64`) zapped, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up.  
+
 Optional fields (`?T`) stay `null` if unset, others get defaults (0, "", false)! Supports any fields you define!
 
 ## What It Does Not

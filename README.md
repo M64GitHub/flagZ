@@ -10,7 +10,7 @@ Dead-simple flags to Zig structs—no fuss, flags: done!
 ## What It Does
 Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`, `isize`) parsed, floats (`f32`, `f64`) zapped, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. See below for all supported types.  
 
-Optional fields (`?T`) stay `null` if unset, others get defaults (0, "", false)! Supports any fields you define!
+Optional fields (`?T`) stay `null` if unset, others get defaults (`0`, `""`, `false`)! Supports any fields you define!
 
 ## What It Does Not
 No `--` flags, no fancy options, no bells or whistles. That’s on purpose—**flagZ** strips it down to dead-simple: your struct, your flags, done. Need more? Grab a full-featured lib—this is for quick, brain-dead-easy parsing, no headaches allowed!
@@ -127,14 +127,14 @@ Verbose: false
 
 ## Add flagZ To Your Project
 ```sh
-zig fetch --save https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz
+zig fetch --save https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.1.0.tar.gz
 ```
 Adds the dependency to your `build.zig.zon`:
 ```zig
 .dependencies = .{
     .flagz = .{
-        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz",
-        .hash = "flagz-1.0.0-vdU1bOaqAADgZG1WzQsfTlTe91FDMqB4gqozYT59tzEK",
+        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.1.0.tar.gz",
+        .hash = "flagz-1.1.0-",
     },
 },
 ```

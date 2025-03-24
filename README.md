@@ -8,9 +8,10 @@
 Dead-simple flags to Zig structs—no fuss, flags: done!
 
 ## What It Does
-Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings are allocated, integers and floats parsed, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. See below for all supported types.  
 
-Optional fields (`?T`) stay `null` if unset, others get defaults (`0`, `""`, `false`). 
+Parses CLI flags into your Zig struct with fuzzy flag-name matching (e.g., `-name` or `-n` sets `name`). Supports strings (allocated), integers and floats (parsed), and booleans (set)—via `flagz.parse()` and `flagz.deinit()`. See Reference for supported types.
+
+Optional fields (`?T`) are `null` if unset; others are initialized to 0, "", or `false` to ensure defined behavior.
 
 ## What It Does Not
 No `--` flags, no fancy options, no bells or whistles. That’s on purpose—**flagZ** strips it down to dead-simple: your struct, your flags, done. Need more? Grab a full-featured lib—this is for quick, brain-dead-easy parsing, no headaches allowed!

@@ -9,7 +9,7 @@ Field names define `-flags` in Zig structs—direct parsing, concise, clear-cut.
 
 ## What It Does
 
-Parses CLI flags into your Zig struct with fuzzy flag-name matching (e.g., `-name` or `-n` sets `name`). Supports strings (allocated), integers and floats (parsed), and booleans (set) via `flagz.parse()`. Defer `flagz.deinit()` to clean up. See Reference for supported types.
+Parses CLI flags into your Zig struct with fuzzy flag-name matching (e.g., `-name` or `-n` sets `name`). Supports strings (allocated), integers and floats (parsed), and booleans (set) via `flagz.parse()`. Defer `flagz.deinit()` to clean up. 
 
 Optional fields (`?T`) are `null` if unset; others are initialized to 0, "", or `false` to ensure defined behavior.
 

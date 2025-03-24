@@ -17,7 +17,7 @@ No `--` flags, no fancy options, no bells or whistles. That’s on purpose—**f
 
 ## Why flagZ?
 
-On flags, **flagZ** tries to flip the script: define a struct, and boom your CLI interface and varieables are set, flags flow in, transparent as can be. No fuss.  
+**flagZ** goal is to try to flip the script: define a struct, and boom your CLI interface and varieables are set, flags flow in, transparent as can be. No fuss.  
 No learning curve, no docs to slog through. It’s not here to out-fancy the big libs—it’s your instant, transparent shortcut to flags without the fuss. **Focus on your code, not the setup**—**flagZ** has your back!
 
 ## Features

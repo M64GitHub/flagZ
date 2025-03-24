@@ -8,7 +8,7 @@
 Dead-simple flags to Zig structs—no fuss, flags: done!
 
 ## What It Does
-Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`, `isize`) parsed, floats (`f32`, `f64`) zapped, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up.  
+Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`, `isize`) parsed, floats (`f32`, `f64`) zapped, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. See below for all supported types.  
 
 Optional fields (`?T`) stay `null` if unset, others get defaults (0, "", false)! Supports any fields you define!
 
@@ -22,7 +22,7 @@ Because CLI args shouldn’t suck. Loops, conditionals, type chaos? Nope! **flag
 Ever hacked a tool and thought, “Ugh, CLI flags—how’d that work again?” Digging through old projects, copy-pasting, tweaking—such a drag! **flagZ** was born to zap that hassle: define a struct, and bam—it’s your CLI **and** your variables, no learning curve, no docs to slog through. It’s not here to out-fancy the big libs—it’s your instant, transparent shortcut to flags without the fuss. **Focus on your code, not the setup**—**flagZ** has your back!
 
 ## Features
-- Supports `bool`, `usize`, `isize`, `u32`, `i32`, `f32`, `f64`, `[]u8`, and `[N]u8` fields.
+- Supports `bool`, all integers (`u1` to `u64`, `i1` to `i64`, `usize`, `isize`), floats (`f32`, `f64`), strings (`[]u8`, `[N]u8`), as well as their optional types.
 - Short flags fuzzy zap (`-v` flips `verbose`, `-n` fills `name`—first match wins!).
 - Errors (`MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow` from `std`).
 
@@ -163,6 +163,62 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(exe);
 }
 ```
+
+
+## Reference: Supported Types
+
+### Booleans
+- **`bool`**—Flips to `true` with flag (e.g., `-verbose`), defaults to `false` if unset.
+- **`?bool`**—Sets to `true` with flag, `null` if unset.
+
+### Integers (Unsigned)
+- **`usize`**—Parsed with `parseInt(i64)`, defaults to `0` if unset.
+- **`u1`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-1 range).
+- **`u2`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-3 range).
+- **`u4`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-15 range).
+- **`u8`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-255 range).
+- **`u16`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-65535 range).
+- **`u32`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-4294967295 range).
+- **`u64`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (0-2^64-1 range).
+- **`?usize`**—Parsed with `parseInt(i64)`, `null` if unset, else value.
+- **`?u1`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-1.
+- **`?u2`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-3.
+- **`?u4`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-15.
+- **`?u8`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-255.
+- **`?u16`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-65535.
+- **`?u32`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-4294967295.
+- **`?u64`**—Parsed with `parseInt(i64)`, `null` if unset, else 0-2^64-1.
+
+### Integers (Signed)
+- **`isize`**—Parsed with `parseInt(i64)`, defaults to `0` if unset.
+- **`i1`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-1 to 0 range).
+- **`i2`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-2 to 1 range).
+- **`i4`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-8 to 7 range).
+- **`i8`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-128 to 127 range).
+- **`i16`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-32768 to 32767 range).
+- **`i32`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-2147483648 to 2147483647 range).
+- **`i64`**—Parsed with `parseInt(i64)`, defaults to `0` if unset (-2^63 to 2^63-1 range).
+- **`?isize`**—Parsed with `parseInt(i64)`, `null` if unset, else value.
+- **`?i1`**—Parsed with `parseInt(i64)`, `null` if unset, else -1 to 0.
+- **`?i2`**—Parsed with `parseInt(i64)`, `null` if unset, else -2 to 1.
+- **`?i4`**—Parsed with `parseInt(i64)`, `null` if unset, else -8 to 7.
+- **`?i8`**—Parsed with `parseInt(i64)`, `null` if unset, else -128 to 127.
+- **`?i16`**—Parsed with `parseInt(i64)`, `null` if unset, else -32768 to 32767.
+- **`?i32`**—Parsed with `parseInt(i64)`, `null` if unset, else -2147483648 to 2147483647.
+- **`?i64`**—Parsed with `parseInt(i64)`, `null` if unset, else -2^63 to 2^63-1.
+
+### Floats
+- **`f32`**—Parsed with `parseFloat`, defaults to `0.0` if unset.
+- **`f64`**—Parsed with `parseFloat`, defaults to `0.0` if unset.
+- **`?f32`**—Parsed with `parseFloat`, `null` if unset, else value.
+- **`?f64`**—Parsed with `parseFloat`, `null` if unset, else value.
+
+### Strings
+- **`[]u8`**—Allocated with `dupe`, defaults to `""` if unset.
+- **`?[]u8`**—Allocated with `dupe`, `null` if unset, else value.
+- **`[N]u8`** (e.g., `[8]u8`)—Copied with `memcpy`, defaults to all zeros if unset (e.g., `[0]u8{0...}`).
+
+
 ## License
 
 **flagZ** is **MIT**—grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.  

@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
 
-Dead-simple flags to Zig structs—no fuss, flags: done!
+Field names define flags in Zig structs—simple, direct parsing
 
 ## What It Does
 

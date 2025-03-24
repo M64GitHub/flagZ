@@ -8,7 +8,7 @@
 Dead-simple flags to Zig structs—no fuss, flags: done!
 
 ## What It Does
-Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`, `isize`) parsed, floats (`f32`, `f64`) zapped, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. Supports any fields you define!
+Parses CLI flags into your Zig struct—flag names fuzzy match field names (e.g., `-name` or `-n` fills `name`). Strings (`[]u8`) are allocated, integers (`usize`, `isize`) parsed, floats (`f32`, `f64`) zapped, booleans flipped—call `flagz.parse()` to fill it, `flagz.deinit()` to clean up. Optional fields (`?T`) stay `null` if unset, others get defaults (0, "", false)! Supports any fields you define!
 
 ## What It Does Not
 No `--` flags, no fancy options, no bells or whistles. That’s on purpose—**flagZ** strips it down to dead-simple: your struct, your flags, done. Need more? Grab a full-featured lib—this is for quick, brain-dead-easy parsing, no headaches allowed!
@@ -24,7 +24,9 @@ Ever hacked a tool and thought, “Ugh, CLI flags—how’d that work again?” 
 - Short flags fuzzy zap (`-v` flips `verbose`, `-n` fills `name`—first match wins!).
 - Errors (`MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, plus `Overflow` from `std`).
 
-## Example
+## Examples
+
+### Parsing Non-Optional Fields
 
 ```zig
 const std = @import("std");
@@ -64,7 +66,7 @@ pub fn main() !void {
 
 Run:
 ```bash
-zig build run -- -name "flagZ rockZ" -count 42 -offset -10 -limit 1000 -shift -500 -temp 23.5 -rate 0.001 -verbose -tag ziggy
+zig build run-nonopt -- -name "flagZ rockZ" -count 42 -offset -10 -limit 1000 -shift -500 -temp 23.5 -rate 0.001 -verbose -tag ziggy
 ```
 Output:
 ```
@@ -78,9 +80,47 @@ Rate (f64): 1e-3
 Verbose: true
 Tag: ziggy
 ```
-## Battle-Tested: flagZ vs. The World
 
-**flagZ** nails 34 tests—smooth flags, tricky cases, overflows, weird, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags drop, flawless pop!
+### Parsing Optional Fields
+
+```zig
+const std = @import("std");
+const flagz = @import("flagz");
+
+pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    const Args = struct {
+        count: ?usize, // null if unset
+        verbose: bool, // false if unset
+    };
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+    if (args.count) |c| std.debug.print("Count set: {}\n", .{c}) else std.debug.print("Count unset\n", .{});
+    std.debug.print("Verbose: {}\n", .{args.verbose});
+}
+```
+Runs and Outputs:
+```bash
+❯ zig build run-opt -- 
+Count unset
+Verbose: false
+
+❯ zig build run-opt -- -v
+Count unset
+Verbose: true
+
+❯ zig build run-opt -- -count 100
+Count set: 100
+Verbose: false
+```
+
+## flagZ vs. The World
+
+**flagZ** nails 45 tests—smooth flags, tricky cases, overflows, weird, all crushed! From `usize` to `f64`, it’s tight and leak-free. Flags drop, flawless pop!
 
 
 ## Add flagZ To Your Project

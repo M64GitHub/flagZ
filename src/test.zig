@@ -1124,3 +1124,328 @@ test "empty argv - defaults only" {
 
     try std.testing.expectEqualStrings("", args.name);
 }
+
+test "optional field unset" {
+    const Args = struct {
+        count: ?usize,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(null, args.count);
+}
+
+test "optional field set" {
+    const Args = struct {
+        count: ?usize,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-count",
+            "42",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(?usize, 42), args.count);
+}
+
+test "non-optional field unset" {
+    const Args = struct {
+        count: usize,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(usize, 0), args.count);
+}
+
+test "non-optional field set" {
+    const Args = struct {
+        count: usize,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-count",
+            "42",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(@as(usize, 42), args.count);
+}
+
+test "mixed optional and non-optional fields" {
+    const Args = struct {
+        count: ?usize, // Optional
+        verbose: bool, // Non-optional
+        name: ?[]u8, // Optional
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-verbose",
+            "-name",
+            "hello",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(null, args.count); // Unset optional
+    try std.testing.expectEqual(true, args.verbose); // Set non-optional
+    try std.testing.expectEqualStrings("hello", args.name.?); // Set optional
+}
+
+test "optional string unset" {
+    const Args = struct {
+        name: ?[]u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual(null, args.name);
+}
+
+test "optional string set" {
+    const Args = struct {
+        name: ?[]u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-name",
+            "hello",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqualStrings("hello", args.name.?);
+}
+
+test "non-optional string unset" {
+    const Args = struct {
+        name: []u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqualStrings("", args.name);
+}
+
+test "non-optional string set" {
+    const Args = struct {
+        name: []u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-name",
+            "hello",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqualStrings("hello", args.name);
+}
+
+test "non-optional array string unset" {
+    const Args = struct {
+        tag: [8]u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual([8]u8{ 0, 0, 0, 0, 0, 0, 0, 0 }, args.tag);
+}
+
+test "non-optional array string set" {
+    const Args = struct {
+        tag: [8]u8,
+    };
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.testing.expect(gpa.deinit() == .ok) catch unreachable;
+    const allocator = gpa.allocator();
+
+    const argv = blk: {
+        const args = [_][:0]const u8{
+            "prog",
+            "-tag",
+            "ziggy",
+        };
+        var list = try allocator.alloc([*:0]u8, args.len);
+        for (args, 0..) |arg, i| {
+            list[i] = @constCast(arg.ptr);
+        }
+        break :blk list;
+    };
+    defer allocator.free(argv);
+    std.os.argv = @constCast(argv);
+
+    const args = try flagz.parse(Args, allocator);
+    defer flagz.deinit(args, allocator);
+
+    try std.testing.expectEqual([8]u8{ 'z', 'i', 'g', 'g', 'y', 0, 0, 0 }, args.tag);
+}

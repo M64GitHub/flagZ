@@ -9,15 +9,45 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/flagz.zig"),
     });
 
-    // example executable
-    const exe = b.addExecutable(.{
-        .name = "example",
-        .root_source_file = b.path("src/example.zig"),
+    // example executable non optional fields
+    const exe_nonopt = b.addExecutable(.{
+        .name = "example-nonopt",
+        .root_source_file = b.path("src/example-nonopt.zig"),
         .target = target,
         .optimize = optimize,
     });
-    exe.root_module.addImport("flagz", flagz_module);
-    b.installArtifact(exe);
+    exe_nonopt.root_module.addImport("flagz", flagz_module);
+    b.installArtifact(exe_nonopt);
+
+    // run the non-opt example
+    const run_cmd_nonopt = b.addRunArtifact(exe_nonopt);
+    run_cmd_nonopt.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_cmd_nonopt.addArgs(args);
+    }
+
+    const run_step_nonopt = b.step("run-nonopt", "Run the example");
+    run_step_nonopt.dependOn(&run_cmd_nonopt.step);
+
+    // example executable optional fields
+    const exe_opt = b.addExecutable(.{
+        .name = "example-opt",
+        .root_source_file = b.path("src/example-opt.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    exe_opt.root_module.addImport("flagz", flagz_module);
+    b.installArtifact(exe_opt);
+
+    // run the non-opt example
+    const run_cmd_opt = b.addRunArtifact(exe_opt);
+    run_cmd_opt.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_cmd_opt.addArgs(args);
+    }
+
+    const run_step_opt = b.step("run-opt", "Run the example");
+    run_step_opt.dependOn(&run_cmd_opt.step);
 
     // tests
     const tests = b.addTest(.{
@@ -26,14 +56,4 @@ pub fn build(b: *std.Build) void {
     const run_tests = b.addRunArtifact(tests);
     const test_step = b.step("test", "Run tests");
     test_step.dependOn(&run_tests.step);
-
-    // run the example
-    const run_cmd = b.addRunArtifact(exe);
-    run_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
-    }
-
-    const run_step = b.step("run", "Run the example");
-    run_step.dependOn(&run_cmd.step);
 }

@@ -18,14 +18,15 @@ Optional fields (`?T`) are `null` if unset; others are initialized to `0`, `""`,
 
 **flagZ** omits double-dash `--` flags, advanced options, and extra features by design. It focuses solely on straightforward struct-based flag parsing. For complex needs, use a comprehensive library—**flagZ** prioritizes simplicity and efficiency over extensive functionality.
 
-## Why flagZ?
-
-Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, not a rival to full-featured libraries.
-
 ## Features
 - Supports `bool`, integers (`u1` to `u8388608`, `i1` to `i8388608`, including `usize`, `isize`), floats (`f32`, `f64`), and strings (`[]u8`, `[N]u8`), with optional variants (`?T`).
 - Short flags use fuzzy matching (e.g., `-v` sets `verbose`, `-n` sets `name`—first match wins).
 - Errors include `MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, and `Overflow` (from `std`).
+
+## Why flagZ?
+
+Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, not a rival to full-featured libraries.
+
 
 ## Examples
 

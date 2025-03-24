@@ -5,7 +5,7 @@
 ![Version](https://img.shields.io/badge/version-1.0.0-8a2be2?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
 
-Field names define flags in Zig structs—simple, direct parsing. Aiming to simplify to its core.
+Field names define `-flags` in Zig structs—direct parsing, concise, clear-cut. Aiming to keep it simple.
 
 ## What It Does
 
@@ -15,7 +15,7 @@ Optional fields (`?T`) are `null` if unset; others are initialized to `0`, `""`,
 
 ## What It Does Not
 
-flagZ omits double-dash `--` flags, advanced options, and extra features by design. It focuses solely on straightforward struct-based flag parsing. For complex needs, use a comprehensive library—flagZ prioritizes simplicity and efficiency over extensive functionality.
+**flagZ** omits double-dash `--` flags, advanced options, and extra features by design. It focuses solely on straightforward struct-based flag parsing. For complex needs, use a comprehensive library—**flagZ** prioritizes simplicity and efficiency over extensive functionality.
 
 ## Why flagZ?
 

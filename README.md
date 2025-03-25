@@ -9,8 +9,7 @@ Field names define `-flags` in Zig structs—direct parsing, concise, clear-cut.
 
 ## What It Does
 
-Parses CLI flags into your Zig struct with fuzzy flag-name matching (e.g., `-name` or `-n` sets `name`). Supports strings (allocated), integers and floats (parsed), and booleans (set)—via `flagz.parse()` and `flagz.deinit()`.  
-See Reference for supported types.
+Parses CLI flags into your Zig struct with fuzzy flag-name matching (e.g., `-name` or `-n` sets `name`). Supports strings (allocated), integers and floats (parsed), and booleans (set) via `flagz.parse()`. Defer `flagz.deinit()` to clean up. 
 
 Optional fields (`?T`) are `null` if unset; others are initialized to `0`, `""`, or `false` to ensure defined behavior.
 
@@ -25,7 +24,7 @@ Optional fields (`?T`) are `null` if unset; others are initialized to `0`, `""`,
 
 ## Why flagZ?
 
-Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, not a rival to full-featured libraries.
+Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, distinct from full-featured libraries.
 
 
 ## Examples
@@ -131,7 +130,7 @@ Adds the dependency to your `build.zig.zon`:
 .dependencies = .{
     .flagz = .{
         .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz",
-        .hash = "flagz-1.1.0-vdU1bF1QAQDWxYQ53oNvZkFKhta-FTdojfz8ijpoMXop",
+        .hash = "flagz-1.0.0-vdU1bF1QAQDFWXde08R32V_WhPRF5nF96edJUNHKDpn4",
     },
 },
 ```
@@ -192,8 +191,6 @@ flagZ supports the following types for flag parsing, with explicit initializatio
 
 **flagZ** is **MIT**—grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.  
 
-<br>
-
-Developed with ❤️ by M64 - **flagZ-tastic** turbocharge your CLI game!
+Developed with ❤️ by M64—streamlined CLI parsing for Zig.
 
 

@@ -130,7 +130,7 @@ Adds the dependency to your `build.zig.zon`:
 .dependencies = .{
     .flagz = .{
         .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz",
-        .hash = "flagz-1.0.0-vdU1bF1QAQDFWXde08R32V_WhPRF5nF96edJUNHKDpn4",
+        .hash = "flagz-1.0.0-vdU1bCRQAQD3QOyKf6gAVpJuhTnlOoA10UmxO_XTycHm",
     },
 },
 ```

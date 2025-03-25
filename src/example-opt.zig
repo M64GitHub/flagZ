@@ -3,8 +3,10 @@ const flagz = @import("flagz");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer _ = gpa.deinit();
-    defer _ = gpa.detectLeaks();
+    defer {
+        _ = gpa.deinit();
+        _ = gpa.detectLeaks();
+    }
     const allocator = gpa.allocator();
 
     const Args = struct {

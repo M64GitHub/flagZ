@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) void {
     // -- Example executable non optional fields
     const exe_nonopt = b.addExecutable(.{
         .name = "example-nonopt",
-        .root_source_file = b.path("src/example-nonopt.zig"),
+        .root_source_file = b.path("src/examples/flagz-nonopt.zig"),
         .target = target,
         .optimize = optimize,
     });
@@ -32,7 +32,7 @@ pub fn build(b: *std.Build) void {
     // -- Example executable optional fields
     const exe_opt = b.addExecutable(.{
         .name = "example-opt",
-        .root_source_file = b.path("src/example-opt.zig"),
+        .root_source_file = b.path("src/examples/flagz-opt.zig"),
         .target = target,
         .optimize = optimize,
     });
@@ -51,7 +51,7 @@ pub fn build(b: *std.Build) void {
 
     // -- Tests
     const tests = b.addTest(.{
-        .root_source_file = b.path("src/test.zig"),
+        .root_source_file = b.path("src/test/test.zig"),
     });
     tests.root_module.addImport("flagz", flagz_module);
     const run_tests = b.addRunArtifact(tests);

@@ -2,7 +2,7 @@
 
 ![Tests](https://github.com/M64GitHub/flagZ/actions/workflows/test.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)
-![Version](https://img.shields.io/badge/version-1.0.0-8a2be2?style=flat)
+![Version](https://img.shields.io/badge/version-1.0.1-8a2be2?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
 
 Field names define `-flags` in Zig structs—direct parsing, concise, clear-cut. Aiming to keep it simple.
@@ -68,17 +68,15 @@ pub fn main() !void {
 
 Run:
 ```bash
-zig build run-nonopt -- -name "flagZ rockZ" -count 42 -offset -10 -limit 1000 -shift -500 -temp 23.5 -rate 0.001 -verbose -tag ziggy
+zig build run-nonopt -- -name "flagZ rockZ" -count 42 -offset -10 -shift -500 -temp 23.5 -verbose -tag ziggy
 ```
 Output:
 ```
 Name: flagZ rockZ
 Count (usize): 42
 Offset (isize): -10
-Limit (u32): 1000
 Shift (i32): -500
 Temp (f32): 2.35e1
-Rate (f64): 1e-3
 Verbose: true
 Tag: ziggy
 ```

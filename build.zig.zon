@@ -1,14 +1,14 @@
 .{
     .name = .flagz,
-    .version = "1.0.0",
+    .version = "1.0.1",
     .fingerprint = 0x72d9f91e6c35d5bd,
     .minimum_zig_version = "0.14.0",
     .dependencies = .{},
     .paths = .{
         "src/flagz.zig",
-        "src/test.zig",
-        "src/example-opt.zig",
-        "src/example-nonopt.zig",
+        "src/test/test.zig",
+        "src/examples/example-opt.zig",
+        "src/examples/example-nonopt.zig",
         "build.zig",
         "build.zig.zon",
         "README.md",

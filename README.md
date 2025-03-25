@@ -5,7 +5,7 @@
 ![Version](https://img.shields.io/badge/version-1.0.1-8a2be2?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
 
-Field names define `-flags` in Zig structs—direct parsing, concise, clear-cut. Aiming to keep it simple.
+Streamlined CLI parsing for Zig. Field names define `-flags` in structs—direct parsing, concise, clear-cut. Aiming to keep it simple.
 
 ## What It Does
 

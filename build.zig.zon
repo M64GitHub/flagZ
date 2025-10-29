@@ -2,7 +2,7 @@
     .name = .flagz,
     .version = "1.0.1",
     .fingerprint = 0x72d9f91e6c35d5bd,
-    .minimum_zig_version = "0.14.0",
+    .minimum_zig_version = "0.15.2",
     .dependencies = .{},
     .paths = .{
         "src/flagz.zig",

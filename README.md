@@ -3,7 +3,7 @@
 ![Tests](https://github.com/M64GitHub/flagZ/actions/workflows/test.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)
 ![Version](https://img.shields.io/badge/version-1.0.1-8a2be2?style=flat)
-![Zig](https://img.shields.io/badge/Zig-0.14.0-orange?style=flat)
+![Zig](https://img.shields.io/badge/Zig-0.15.2-orange?style=flat)
 
 Streamlined CLI parsing for Zig. Field names define flags in structs—direct parsing, concise, clear-cut. Aiming to keep it simple.
 
@@ -37,10 +37,7 @@ const flagz = @import("flagz");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer {
-        _ = gpa.deinit();
-        _ = gpa.detectLeaks();
-    }
+    defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
     const Args = struct {
@@ -89,10 +86,7 @@ const flagz = @import("flagz");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer {
-        _ = gpa.deinit();
-        _ = gpa.detectLeaks();
-    }
+    defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
     const Args = struct {

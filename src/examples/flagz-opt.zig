@@ -13,6 +13,11 @@ pub fn main() !void {
 
     const args = try flagz.parse(Args, allocator);
     defer flagz.deinit(args, allocator);
-    if (args.count) |c| std.debug.print("Count set: {}\n", .{c}) else std.debug.print("Count unset\n", .{});
+
+    if (args.count) |c|
+        std.debug.print("Count set: {}\n", .{c})
+    else
+        std.debug.print("Count unset\n", .{});
+
     std.debug.print("Verbose: {}\n", .{args.verbose});
 }

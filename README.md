@@ -2,7 +2,7 @@
 
 ![Tests](https://github.com/M64GitHub/flagZ/actions/workflows/test.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)
-![Version](https://img.shields.io/badge/version-1.0.1-8a2be2?style=flat)
+![Version](https://img.shields.io/badge/version-1.1.0-8a2be2?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.15.2-orange?style=flat)
 
 Streamlined CLI parsing for Zig. Field names define flags in structs—direct parsing, concise, clear-cut. Aiming to keep it simple.
@@ -118,16 +118,7 @@ Verbose: false
 
 ## Add flagZ To Your Project
 ```sh
-zig fetch --save https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz
-```
-Adds the dependency to your `build.zig.zon`:
-```zig
-.dependencies = .{
-    .flagz = .{
-        .url = "https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.0.0.tar.gz",
-        .hash = "flagz-1.0.0-vdU1bCRQAQD3QOyKf6gAVpJuhTnlOoA10UmxO_XTycHm",
-    },
-},
+zig fetch --save https://github.com/M64GitHub/flagZ/archive/refs/tags/v1.1.0.tar.gz
 ```
 
 `build.zig`: import `flagZ` as follows:

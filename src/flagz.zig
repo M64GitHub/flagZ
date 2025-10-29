@@ -93,7 +93,9 @@ pub fn parse(comptime T: type, allocator: std.mem.Allocator) !T {
                         },
 
                         .int => |_| {
-                            if (arg_index + 1 >= args.len) return error.MissingValue;
+                            if (arg_index + 1 >= args.len)
+                                return error.MissingValue;
+
                             const next_arg = args[arg_index + 1];
                             if (next_arg.len > 1 and next_arg[0] == '-' and
                                 std.ascii.isAlphabetic(next_arg[1]))

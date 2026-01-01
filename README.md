@@ -5,7 +5,7 @@
 ![Version](https://img.shields.io/badge/version-1.1.0-8a2be2?style=flat)
 ![Zig](https://img.shields.io/badge/Zig-0.15.2-orange?style=flat)
 
-Streamlined CLI parsing for Zig. Field names define flags in structs—direct parsing, concise, clear-cut. Aiming to keep it simple.
+Streamlined CLI parsing for Zig. Field names define flags in structs-direct parsing, concise, clear-cut. Aiming to keep it simple.
 
 ## What It Does
 
@@ -15,16 +15,16 @@ Optional fields (`?T`) are `null` if unset; others are initialized to `0`, `""`,
 
 ## What It Does Not
 
-**flagZ** omits double-dash `--` flags, advanced options, and extra features by design. It focuses solely on straightforward struct-based flag parsing. For complex needs, use a comprehensive library—**flagZ** prioritizes simplicity and efficiency over extensive functionality.
+**flagZ** omits double-dash `--` flags, advanced options, and extra features by design. It focuses solely on straightforward struct-based flag parsing. For complex needs, use a comprehensive library-**flagZ** prioritizes simplicity and efficiency over extensive functionality.
 
 ## Features
 - Supports `bool`, integers (`u1` to `u8388608`, `i1` to `i8388608`, including `usize`, `isize`), floats (`f32`, `f64`), and strings (`[]u8`, `[N]u8`), with optional variants (`?T`).
-- Short flags use fuzzy matching (e.g., `-v` sets `verbose`, `-n` sets `name`—first match wins).
+- Short flags use fuzzy matching (e.g., `-v` sets `verbose`, `-n` sets `name`-first match wins).
 - Errors include `MissingValue`, `StringTooLong`, `InvalidIntValue`, `NegativeValueNotAllowed`, and `Overflow` (from `std`).
 
 ## Why flagZ?
 
-Command-line tools in Zig often require parameters, yet managing them can lead to complexity—ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names—a transparent, efficient shortcut, distinct from full-featured libraries.
+Command-line tools in Zig often require parameters, yet managing them can lead to complexity-ad-hoc fixes, library hunts, and repetitive code across projects. **flagZ** seeks to streamline this for Zig developers. With Zig’s comptime capabilities, its core strength is simple: field names directly define argument names-a transparent, efficient shortcut, distinct from full-featured libraries.
 
 
 ## Examples
@@ -148,35 +148,35 @@ pub fn build(b: *std.Build) void {
 
 ## Reference: Supported Types
 
-flagZ supports the following types for flag parsing, with explicit initialization to ensure predictable behavior—avoiding undefined values for reliability. Numeric types parse in base 10.
+flagZ supports the following types for flag parsing, with explicit initialization to ensure predictable behavior-avoiding undefined values for reliability. Numeric types parse in base 10.
 
 ### Booleans
-- **`bool`**—Sets to `true` only if the flag is present on the command line, otherwise `false`.
-- **`?bool`**—Sets to `true` if the flag is present, `null` if unset.
+- **`bool`**-Sets to `true` only if the flag is present on the command line, otherwise `false`.
+- **`?bool`**-Sets to `true` if the flag is present, `null` if unset.
 
 ### Integers (Unsigned)
-- **`uN`** (e.g., `u1`, `u8`, `u32`, `u8388608`, `usize`)—Parses to the specified unsigned integer type, initialized to 0 if unset.
-- **`?uN`**—Parses to the specified unsigned integer type, `null` if unset.
+- **`uN`** (e.g., `u1`, `u8`, `u32`, `u8388608`, `usize`)-Parses to the specified unsigned integer type, initialized to 0 if unset.
+- **`?uN`**-Parses to the specified unsigned integer type, `null` if unset.
 
 ### Integers (Signed)
-- **`iN`** (e.g., `i1`, `i32`, `i8388608`, `isize`)—Parses to the specified signed integer type, initialized to 0 if unset.
-- **`?iN`**—Parses to the specified signed integer type, `null` if unset.
+- **`iN`** (e.g., `i1`, `i32`, `i8388608`, `isize`)-Parses to the specified signed integer type, initialized to 0 if unset.
+- **`?iN`**-Parses to the specified signed integer type, `null` if unset.
 
 ### Floats
-- **`f32`, `f64`**—Parses to the specified floating-point type, initialized to 0.0 if unset.
-- **`?f32`, `?f64`**—Parses to the specified floating-point type, `null` if unset.
+- **`f32`, `f64`**-Parses to the specified floating-point type, initialized to 0.0 if unset.
+- **`?f32`, `?f64`**-Parses to the specified floating-point type, `null` if unset.
 
 ### Strings
-- **`[]u8`**—Allocates the flag value as a string, initialized to "" if unset.
-- **`?[]u8`**—Allocates the flag value as a string, `null` if unset.
-- **`[N]u8`**—Copies the flag value into a fixed-size array, initialized to all zeros if unset.
+- **`[]u8`**-Allocates the flag value as a string, initialized to "" if unset.
+- **`?[]u8`**-Allocates the flag value as a string, `null` if unset.
+- **`[N]u8`**-Copies the flag value into a fixed-size array, initialized to all zeros if unset.
 
 *Note*: Optional fixed-size arrays (e.g., `?[N]u8`) are not supported due to Zig’s type system, which does not allow nullability for arrays with fixed lengths.
 
 ## License
 
-**flagZ** is **MIT**—grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.  
+**flagZ** is **MIT**-grab it, tweak it, twist it, share it, free as can be! Check [LICENSE](LICENSE) for the nitty-gritty.  
 
-Developed with ❤️ by M64—streamlined CLI parsing for Zig.
+Developed with ❤️ by M64-streamlined CLI parsing for Zig.
 
 
